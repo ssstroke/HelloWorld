@@ -18,11 +18,16 @@ class Camera
 public:
     std::string image_filename = "output.png";
 
-    size_t image_width       = 100;  // Rendered image width in pixels
-    size_t image_height      = 100;  // Rendered image height in pixels
+    size_t image_width       = 100;              // Rendered image width in pixels
+    size_t image_height      = 100;              // Rendered image height in pixels
 
-    size_t samples_per_pixel = 10;   // Count of random samples for each pixel
-    size_t max_depth         = 10;   // Maximum number of ray bounces into scene
+    Point3 origin            = Point3(0, 0, 0);
+    Vec3   direction         = Vec3(0, 0, -1);
+    Vec3   vup               = Vec3(0, 1, 0);    // Camera-relative "up" direction
+    double v_fov             = 90;               // Vertical view angle (field of view)
+
+    size_t samples_per_pixel = 10;               // Count of random samples for each pixel
+    size_t max_depth         = 10;               // Maximum number of ray bounces into scene
 
     Camera() {}
 
@@ -57,16 +62,17 @@ public:
         }
     }
 private:
-    double aspect_ratio = 1.0;   // Ratio of image width over height
+    double aspect_ratio = 1.0;       // Ratio of image width over height
 
-    Point3 center;               // Camera center
-    Point3 pixel00_location;     // Location of pixel (0, 0)
-    Vec3   pixel_delta_u;        // Offset to pixel to the right
-    Vec3   pixel_delta_v;        // Offset to pixel to the bottom
+    Point3 pixel00_location;         // Location of pixel (0, 0)
+    Vec3   pixel_delta_u;            // Offset to pixel to the right
+    Vec3   pixel_delta_v;            // Offset to pixel to the bottom
 
     double pixel_samples_scale = 1;  // Color scale factor for a sum of pixel samples
 
-    Image image = Image(this->image_width, this->image_height);
+    Image  image = Image(this->image_width, this->image_height);
+     
+    Vec3   u, v, w;                  // Camera frame basis vectors (right, up, opposite view direction)
 
     void Initialize()
     {
@@ -77,21 +83,28 @@ private:
         this->aspect_ratio = (double)this->image_width / (double)this->image_height;
 
         // Viewport dimensions.
-        const auto FOCAL_LENGTH = 1.0;
-        const auto VIEWPORT_HEIGHT = 2.0;
-        const auto VIEWPORT_WIDTH = VIEWPORT_HEIGHT * this->aspect_ratio;
+        const auto focal_length = 1.0;
+        const auto theta = DegreesToRadians(this->v_fov);
+        const auto h = std::tan(theta / 2);
+        const auto viewport_height = 2 * h * focal_length;
+        const auto viewport_width = viewport_height * this->aspect_ratio;
+
+        // Calculate u, v, w.
+        this->w = -this->direction;
+        this->u = UnitVector(Cross(this->vup, this->w));
+        this->v = Cross(this->w, this->u);
 
         // Calculate the vectors across the horizontal and down the vertical viewport edges.
-        const auto VIEWPORT_U = Vec3(VIEWPORT_WIDTH, 0, 0);
-        const auto VIEWPORT_V = Vec3(0, -VIEWPORT_HEIGHT, 0);
+        const auto viewport_u =  this->u * viewport_width;
+        const auto viewport_v = -this->v * viewport_height;
 
         // Calculate the horizontal and vertical delta vectors from pixel to pixel.
-        this->pixel_delta_u = VIEWPORT_U / (double)this->image_width;
-        this->pixel_delta_v = VIEWPORT_V / (double)this->image_height;
+        this->pixel_delta_u = viewport_u / (double)this->image_width;
+        this->pixel_delta_v = viewport_v / (double)this->image_height;
 
         // Calculate the location of pixel (0, 0).
-        const auto VIEWPORT_UPPER_LEFT = center - Vec3(0, 0, FOCAL_LENGTH) - VIEWPORT_U / 2 - VIEWPORT_V / 2;
-        this->pixel00_location = VIEWPORT_UPPER_LEFT + 0.5 * (this->pixel_delta_u + this->pixel_delta_v);
+        const auto viewport_upper_left = this->origin - this->w * focal_length - viewport_u / 2 - viewport_v / 2;
+        this->pixel00_location = viewport_upper_left + 0.5 * (this->pixel_delta_u + this->pixel_delta_v);
     }
 
     Ray GetRay(const size_t x, const size_t y) const
@@ -105,7 +118,7 @@ private:
             ((x + offset.x()) * this->pixel_delta_u) +
             ((y + offset.y()) * this->pixel_delta_v);
         
-        const auto ray_origin = this->center;
+        const auto ray_origin = this->origin;
         const auto ray_direction = pixel_sample - ray_origin;
 
         return Ray(ray_origin, ray_direction);

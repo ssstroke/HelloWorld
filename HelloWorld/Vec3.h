@@ -104,7 +104,7 @@ inline double Dot(const Vec3& u, const Vec3& v)
     return u.x() * v.x() + u.y() * v.y() + u.z() * v.z();
 }
 
-inline Vec3 cross(const Vec3& u, const Vec3& v)
+inline Vec3 Cross(const Vec3& u, const Vec3& v)
 {
     return Vec3(
         u.y() * v.z() - u.z() * v.y(),
