@@ -26,6 +26,9 @@ public:
     Vec3   vup               = Vec3(0, 1, 0);    // Camera-relative "up" direction
     double v_fov             = 90;               // Vertical view angle (field of view)
 
+    double defocus_angle     = 0;                // Variation angle of rays through each pixel
+    double focus_distance    = 10;               // Distance from camera origin to plane of perfect focus
+
     size_t samples_per_pixel = 10;               // Count of random samples for each pixel
     size_t max_depth         = 10;               // Maximum number of ray bounces into scene
 
@@ -62,17 +65,19 @@ public:
         }
     }
 private:
-    double aspect_ratio = 1.0;       // Ratio of image width over height
+    double aspect_ratio = 1.0;             // Ratio of image width over height
 
-    Point3 pixel00_location;         // Location of pixel (0, 0)
-    Vec3   pixel_delta_u;            // Offset to pixel to the right
-    Vec3   pixel_delta_v;            // Offset to pixel to the bottom
+    Point3 pixel00_location;               // Location of pixel (0, 0)
+    Vec3   pixel_delta_u;                  // Offset to pixel to the right
+    Vec3   pixel_delta_v;                  // Offset to pixel to the bottom
 
-    double pixel_samples_scale = 1;  // Color scale factor for a sum of pixel samples
+    double pixel_samples_scale = 1;        // Color scale factor for a sum of pixel samples
 
     Image  image = Image(this->image_width, this->image_height);
      
-    Vec3   u, v, w;                  // Camera frame basis vectors (right, up, opposite view direction)
+    Vec3   u, v, w;                        // Camera frame basis vectors (right, up, opposite view direction)
+
+    Vec3   defocus_disk_u, defocus_disk_v; // Defocus disk horizontal, vertical radius
 
     void Initialize()
     {
@@ -83,10 +88,9 @@ private:
         this->aspect_ratio = (double)this->image_width / (double)this->image_height;
 
         // Viewport dimensions.
-        const auto focal_length = 1.0;
         const auto theta = DegreesToRadians(this->v_fov);
         const auto h = std::tan(theta / 2);
-        const auto viewport_height = 2 * h * focal_length;
+        const auto viewport_height = 2 * h * this->focus_distance;
         const auto viewport_width = viewport_height * this->aspect_ratio;
 
         // Calculate u, v, w.
@@ -103,14 +107,18 @@ private:
         this->pixel_delta_v = viewport_v / (double)this->image_height;
 
         // Calculate the location of pixel (0, 0).
-        const auto viewport_upper_left = this->origin - this->w * focal_length - viewport_u / 2 - viewport_v / 2;
+        const auto viewport_upper_left = this->origin - this->w * this->focus_distance - viewport_u / 2 - viewport_v / 2;
         this->pixel00_location = viewport_upper_left + 0.5 * (this->pixel_delta_u + this->pixel_delta_v);
+
+        const auto defocus_radius = this->focus_distance * std::tan(DegreesToRadians(this->defocus_angle / 2));
+        this->defocus_disk_u = u * defocus_radius;
+        this->defocus_disk_v = v * defocus_radius;
     }
 
     Ray GetRay(const size_t x, const size_t y) const
     {
-        // Construct a camera ray origintating from the origin and directed at randomly sampled
-        // point around the pixel location (x, y).
+        // Construct a camera ray origintating from the defocused disk and directed
+        // at randomly sampled point around the pixel location (x, y).
 
         const auto offset = SampleSquare();
         const auto pixel_sample =
@@ -118,7 +126,7 @@ private:
             ((x + offset.x()) * this->pixel_delta_u) +
             ((y + offset.y()) * this->pixel_delta_v);
         
-        const auto ray_origin = this->origin;
+        const auto ray_origin = (defocus_angle <= 0) ? this->origin : DefocusDiskSample();
         const auto ray_direction = pixel_sample - ray_origin;
 
         return Ray(ray_origin, ray_direction);
@@ -128,6 +136,12 @@ private:
     {
         // Returns the vector to a random point in the [-.5,-5]-[+.5,+.5] unit square.
         return Vec3(RandomDouble() - 0.5, RandomDouble() - 0.5, 0);
+    }
+
+    Point3 DefocusDiskSample() const
+    {
+        const auto p = RandomInUnitDisk();
+        return this->origin + (p.x() * this->defocus_disk_u) + (p.y() * this->defocus_disk_v);
     }
 
     Color RayColor(const Ray& ray, const size_t depth, const Hittable& world) const

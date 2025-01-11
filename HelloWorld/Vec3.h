@@ -156,6 +156,18 @@ inline Vec3 RandomOnHemisphere(const Vec3& normal)
     }
 }
 
+inline Vec3 RandomInUnitDisk()
+{
+    while (true)
+    {
+        const auto p = Vec3(RandomDouble(-1, 1), RandomDouble(-1, 1), 0);
+        if (p.LengthSquared() < 1)
+        {
+            return p;
+        }
+    }
+}
+
 inline Vec3 Reflect(const Vec3& v, const Vec3& n)
 {
     return v - 2 * Dot(v, n) * n;
