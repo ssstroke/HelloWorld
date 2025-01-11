@@ -38,6 +38,11 @@ public:
     {
         this->Initialize();
 
+        if (image.WritePNG(this->image_filename) == 0)
+        {
+            std::clog << "Failed to write to " << this->image_filename << ".";
+        }
+
         for (size_t h = 0; h < this->image_height; ++h)
         {
             std::clog << "Scanline " << h << " out of " << this->image_height - 1 << ".\n";
@@ -128,8 +133,9 @@ private:
         
         const auto ray_origin = (defocus_angle <= 0) ? this->origin : DefocusDiskSample();
         const auto ray_direction = pixel_sample - ray_origin;
+        const auto ray_time = RandomDouble();
 
-        return Ray(ray_origin, ray_direction);
+        return Ray(ray_origin, ray_direction, ray_time);
     }
 
     Vec3 SampleSquare() const
