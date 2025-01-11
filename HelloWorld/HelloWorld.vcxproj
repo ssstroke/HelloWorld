@@ -135,17 +135,17 @@
     <ClCompile Include="HelloWorld.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="Color.h" />
-    <ClInclude Include="Hittable.h" />
-    <ClInclude Include="HittableList.h" />
-    <ClInclude Include="Image.h" />
-    <ClInclude Include="Interval.h" />
-    <ClInclude Include="Material.h" />
-    <ClInclude Include="Ray.h" />
-    <ClInclude Include="RTWeekend.h" />
-    <ClInclude Include="Sphere.h" />
-    <ClInclude Include="Vec3.h" />
+    <ClInclude Include="Camera.hpp" />
+    <ClInclude Include="Color.hpp" />
+    <ClInclude Include="Hittable.hpp" />
+    <ClInclude Include="HittableList.hpp" />
+    <ClInclude Include="Image.hpp" />
+    <ClInclude Include="Interval.hpp" />
+    <ClInclude Include="Material.hpp" />
+    <ClInclude Include="Ray.hpp" />
+    <ClInclude Include="RTWeekend.hpp" />
+    <ClInclude Include="Sphere.hpp" />
+    <ClInclude Include="Vec3.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

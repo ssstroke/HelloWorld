@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Color.h"
-#include "Hittable.h"
+#include "Color.hpp"
+#include "Hittable.hpp"
 
 class Material
 {

@@ -1,9 +1,9 @@
-﻿#include "RTWeekend.h"
+﻿#include "RTWeekend.hpp"
 
-#include "Camera.h"
-#include "Hittable.h"
-#include "HittableList.h"
-#include "Sphere.h"
+#include "Camera.hpp"
+#include "Hittable.hpp"
+#include "HittableList.hpp"
+#include "Sphere.hpp"
 
 int main()
 {
@@ -78,15 +78,15 @@ int main()
     //world.Add(std::make_shared<Sphere>(Point3(4, 1, 0), 1.0, material3));
 
     Camera camera;
-    camera.image_filename = "output/output_30_12_24_1.png";
+    camera.image_filename = "output/output_hpp.png";
 
-    camera.image_width  = 1024;
-    camera.image_height = 768;
+    camera.image_width  = 128;
+    camera.image_height = 128;
 
     //camera.origin     = Point3(13, 2, 3);
     //camera.direction  = UnitVector(-camera.origin);
     //camera.vup        = UnitVector(Vec3(1, 1, 0));
-    camera.v_fov      = 20;
+    camera.v_fov      = 50;
 
     /*camera.defocus_angle  = 0.6;
     camera.focus_distance = 10;*/

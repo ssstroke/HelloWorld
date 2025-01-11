@@ -5,10 +5,10 @@
 
 #pragma once
 
-#include "Hittable.h"
-#include "Material.h"
-#include "Image.h"
-#include "Ray.h"
+#include "Hittable.hpp"
+#include "Material.hpp"
+#include "Image.hpp"
+#include "Ray.hpp"
 
 #include <iostream>
 #include <string>

@@ -20,37 +20,37 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Image.h">
+    <ClInclude Include="Image.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Vec3.h">
+    <ClInclude Include="Vec3.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Color.h">
+    <ClInclude Include="Color.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Ray.h">
+    <ClInclude Include="Ray.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Hittable.h">
+    <ClInclude Include="Hittable.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Sphere.h">
+    <ClInclude Include="Sphere.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HittableList.h">
+    <ClInclude Include="HittableList.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RTWeekend.h">
+    <ClInclude Include="RTWeekend.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Interval.h">
+    <ClInclude Include="Interval.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
+    <ClInclude Include="Camera.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Material.h">
+    <ClInclude Include="Material.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

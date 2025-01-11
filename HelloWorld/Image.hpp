@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Color.h"
-#include "Interval.h"
+#include "Color.hpp"
+#include "Interval.hpp"
 
 #include <cstdint>
 #include <string>
