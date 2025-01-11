@@ -38,11 +38,6 @@ public:
     {
         this->Initialize();
 
-        if (image.WritePNG(this->image_filename) == 0)
-        {
-            std::clog << "Failed to write to " << this->image_filename << ".";
-        }
-
         for (size_t h = 0; h < this->image_height; ++h)
         {
             std::clog << "Scanline " << h << " out of " << this->image_height - 1 << ".\n";
@@ -62,11 +57,11 @@ public:
 
         if (image.WritePNG(this->image_filename))
         {
-            std::clog << "Write to " << this->image_filename << ".";
+            std::clog << "Write to " << this->image_filename << ".\n";
         }
         else
         {
-            std::clog << "Failed to write to " << this->image_filename << ".";
+            std::clog << "Failed to write to " << this->image_filename << ".\n";
         }
     }
 private:
