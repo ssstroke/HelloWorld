@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# TODO: Do I really need to ignore it?
+/vcpkg_installed/x64-windows
