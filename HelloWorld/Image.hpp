@@ -11,7 +11,8 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION // must be defined before #including
 #include <stb_image_write.h>
 
-class Image {
+class Image
+{
 public:
     std::vector<uint8_t> data;
     size_t width;

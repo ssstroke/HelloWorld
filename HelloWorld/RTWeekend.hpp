@@ -5,14 +5,14 @@
 
 // Constants
 
-const double K_INFINITY = std::numeric_limits<double>::infinity();
-const double K_PI = 3.1415926535897932385;
+const double infinity = std::numeric_limits<double>::infinity();
+const double pi       = 3.1415926535897932385;
 
 // Utility Functions
 
 inline double DegreesToRadians(const double degrees)
 {
-    return degrees * K_PI / 180;
+    return degrees * pi / 180;
 }
 
 inline double RandomDouble()

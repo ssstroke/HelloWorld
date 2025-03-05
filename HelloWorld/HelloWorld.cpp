@@ -26,10 +26,10 @@ int main()
     world.Add(std::make_shared<Sphere>(Point3(1.0, 0.0, -1.0), 0.5, material_right));
 
     Camera camera;
-    camera.image_filename = "output/output_motion_blur.png";
+    camera.image_filename = "output/output_2025.png";
 
-    camera.image_width  = 640;
-    camera.image_height = 480;
+    camera.image_width  = 320;
+    camera.image_height = 240;
 
     camera.origin     = Point3(0, 0, 2);
     //camera.direction  = UnitVector(-camera.origin);

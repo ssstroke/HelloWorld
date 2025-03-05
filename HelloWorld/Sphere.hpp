@@ -43,9 +43,12 @@ public:
         }
 
         record.t = root;
+
         record.point = ray.At(record.t);
+
         const auto outward_normal = (record.point - current_center) / radius;
         record.SetFaceNormal(ray, outward_normal);
+
         record.material = this->material;
 
         return true;
@@ -56,4 +59,3 @@ private:
     double radius;
     std::shared_ptr<Material> material;
 };
-

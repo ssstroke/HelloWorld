@@ -7,7 +7,7 @@ class Interval
 public:
     double min, max;
 
-    Interval() : min(+std::numeric_limits<double>().infinity()), max(-std::numeric_limits<double>().infinity()) {}
+    Interval() : min(+infinity), max(-infinity) {}
 
     Interval(const double min, const double max) : min(min), max(max) {}
 
@@ -36,5 +36,5 @@ public:
     static const Interval empty, universe;
 };
 
-const Interval Interval::empty = Interval(+std::numeric_limits<double>().infinity(), -std::numeric_limits<double>().infinity());
-const Interval Interval::universe = Interval(-std::numeric_limits<double>().infinity(), +std::numeric_limits<double>().infinity());
+const Interval Interval::empty    = Interval(+infinity, -infinity);
+const Interval Interval::universe = Interval(-infinity, +infinity);

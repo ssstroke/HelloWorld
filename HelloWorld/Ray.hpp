@@ -13,6 +13,7 @@ public:
     {
         return this->origin;
     }
+
     const Vec3& Direction() const
     { 
         return this->direction; 

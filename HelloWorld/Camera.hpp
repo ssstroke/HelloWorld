@@ -64,6 +64,7 @@ public:
             std::clog << "Failed to write to " << this->image_filename << ".\n";
         }
     }
+
 private:
     double aspect_ratio = 1.0;             // Ratio of image width over height
 
@@ -154,7 +155,7 @@ private:
 
         HitRecord hit_record;
 
-        if (world.Hit(ray, Interval(0.001, K_INFINITY), hit_record))
+        if (world.Hit(ray, Interval(0.001, infinity), hit_record))
         {
             Ray scattered;
             Color attenuation;

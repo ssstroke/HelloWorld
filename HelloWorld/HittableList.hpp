@@ -10,10 +10,21 @@ public:
     std::vector<std::shared_ptr<Hittable>> objects;
 
     HittableList() {}
-    HittableList(std::shared_ptr<Hittable> object) { Add(object); }
 
-    void Add(const std::shared_ptr<Hittable> object) { objects.push_back(object); }
-    void Clear() { objects.clear(); }
+    HittableList(std::shared_ptr<Hittable> object) 
+    { 
+        Add(object); 
+    }
+
+    void Add(const std::shared_ptr<Hittable> object) 
+    { 
+        objects.push_back(object); 
+    }
+
+    void Clear() 
+    { 
+        objects.clear(); 
+    }
 
     bool Hit(const Ray& ray, const Interval ray_t, HitRecord& record) const override
     {
@@ -31,6 +42,10 @@ public:
                 // By storing 'closest_so_far' and using it in Hit() function the
                 // ray won't hit the sphere that is 2 units away. I.e. we will not
                 // hit objects that are behind the closest object. Makes sense ;)
+                //
+                // I just came back to this code in 2025 (it is a year later now)
+                // and I want to thank myself for providing an explanation to my
+                // future self.
                 closest_so_far = temp_record.t;
 
                 record = temp_record;
@@ -40,6 +55,3 @@ public:
         return hit_anything;
     }
 };
-
-
-

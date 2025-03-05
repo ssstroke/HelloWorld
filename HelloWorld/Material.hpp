@@ -32,6 +32,7 @@ public:
 
         return true;
     }
+
 private:
     Color albedo;
 };
@@ -51,6 +52,7 @@ public:
 
         return (Dot(scattered.Direction(), hit_record.normal) > 0);
     }
+
 private:
     Color albedo;
     double fuzz;
