@@ -17,8 +17,11 @@ inline double DegreesToRadians(const double degrees)
 
 inline double RandomDouble()
 {
-    static std::uniform_real_distribution<double> distribution(0.0, 1.0);
+    // https://github.com/RayTracing/raytracing.github.io/discussions/1680
+    std::uniform_real_distribution<double> distribution(0.0, 1.0);
+
     static std::mt19937 generator;
+
     return distribution(generator);
 }
 
