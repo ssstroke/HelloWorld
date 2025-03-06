@@ -15,19 +15,12 @@ inline double DegreesToRadians(const double degrees)
     return degrees * pi / 180;
 }
 
-inline double RandomDouble()
+inline double RandomDouble(const double min = 0, const double max = 1)
 {
     // https://github.com/RayTracing/raytracing.github.io/discussions/1680
-    std::uniform_real_distribution<double> distribution(0.0, 1.0);
+    std::uniform_real_distribution<double> distribution(min, max);
 
     static std::mt19937 generator;
 
-    return distribution(generator);
-}
-
-inline double RandomDouble(const double min, const double max)
-{
-    static std::uniform_real_distribution<double> distribution(min, max);
-    static std::mt19937 generator;
     return distribution(generator);
 }
