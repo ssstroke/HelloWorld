@@ -1,15 +1,20 @@
 ﻿#include "RTWeekend.hpp"
 
+#include "BVH.hpp"
 #include "Camera.hpp"
 #include "Hittable.hpp"
 #include "HittableList.hpp"
 #include "Sphere.hpp"
+
+#include <chrono>
 
 using std::make_shared;
 using std::shared_ptr;
 
 int main()
 {
+    const auto start = std::chrono::high_resolution_clock::now();  // Start time
+
     HittableList world;
 
     auto ground_material = make_shared<Lambertian>(Color(0.5, 0.5, 0.5));
@@ -55,9 +60,11 @@ int main()
     auto material3 = make_shared<Metal>(Color(0.7, 0.6, 0.5), 0.0);
     world.Add(make_shared<Sphere>(Point3(4, 1, 0), 1.0, material3));
 
+    world = HittableList(make_shared<BVHNode>(world));
+
     Camera camera;
 
-    camera.image_filename = "output/output_long_render_many_spheres_with_motion_blur.png";
+    camera.image_filename = "output/output_long_render_many_spheres_with_motion_blur_bvh.png";
 
     camera.image_width  = 400;
     camera.image_height = (size_t)((double)camera.image_width / (16.0 / 9.0));
@@ -74,6 +81,11 @@ int main()
     camera.focus_distance = 10;
 
     camera.Render(world);
+
+    const auto end = std::chrono::high_resolution_clock::now();  // End time
+    std::chrono::duration<double> elapsed = end - start;         // Compute duration
+
+    std::cout << "Execution time: " << elapsed.count() << " seconds\n";
 
     return 0;
 }

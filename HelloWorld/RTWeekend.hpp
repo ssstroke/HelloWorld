@@ -24,3 +24,8 @@ inline double RandomDouble(const double min = 0, const double max = 1)
 
     return distribution(generator);
 }
+
+inline int RandomInt(const int min, const int max)
+{
+    return int(RandomDouble(min, max + 1));
+}

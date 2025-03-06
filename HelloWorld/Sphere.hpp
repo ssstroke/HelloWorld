@@ -7,16 +7,28 @@ class Sphere : public Hittable
 public:
     // Stationary sphere.
     Sphere(const Point3& static_center, const double radius, const std::shared_ptr<Material> material) :
-        center(static_center, Vec3(0, 0, 0)), radius(std::max(0.0, radius)), material(material) {}
+        center(static_center, Vec3(0, 0, 0)), radius(std::max(0.0, radius)), material(material) 
+    {
+        const auto rvec = Vec3(radius, radius, radius);
+        this->bbox = AABB(static_center - rvec, static_center + rvec);
+    }
 
     // Moving sphere.
     Sphere(const Point3& center_0, const Point3& center_1, const double radius, const std::shared_ptr<Material> material) :
-        center(center_0, center_1 - center_0), radius(std::max(0.0, radius)), material(material) {}
+        center(center_0, center_1 - center_0), radius(std::max(0.0, radius)), material(material) 
+    {
+        const auto rvec = Vec3(radius, radius, radius);
+        const AABB bbox_0(center.At(0) - rvec, center.At(0) + rvec);
+        const AABB bbox_1(center.At(1) - rvec, center.At(1) + rvec);
+        this->bbox = AABB(bbox_0, bbox_1);
+    }
 
     bool Hit(const Ray& ray, const Interval ray_t, HitRecord& record) const override
     {
         const Point3 current_center = center.At(ray.Time());
+
         const Vec3 OC = current_center - ray.Origin();
+
         const auto A = ray.Direction().LengthSquared();
         const auto H = Dot(ray.Direction(), OC);
         const auto C = OC.LengthSquared() - radius * radius;
@@ -54,8 +66,14 @@ public:
         return true;
     }
 
+    AABB BBox() const override
+    {
+        return this->bbox;
+    }
+
 private:
     Ray center;
     double radius;
     std::shared_ptr<Material> material;
+    AABB bbox;
 };

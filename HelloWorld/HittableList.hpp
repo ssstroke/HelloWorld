@@ -1,5 +1,6 @@
 #pragma once
 
+#include "AABB.hpp"
 #include "Hittable.hpp"
 
 #include <vector>
@@ -18,12 +19,18 @@ public:
 
     void Add(const std::shared_ptr<Hittable> object) 
     { 
-        objects.push_back(object); 
+        objects.push_back(object);
+        this->bbox = AABB(this->bbox, object->BBox());
     }
 
     void Clear() 
     { 
         objects.clear(); 
+    }
+
+    AABB BBox() const override
+    {
+        return this->bbox;
     }
 
     bool Hit(const Ray& ray, const Interval ray_t, HitRecord& record) const override
@@ -54,4 +61,7 @@ public:
 
         return hit_anything;
     }
+
+private:
+    AABB bbox;
 };

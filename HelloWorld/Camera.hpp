@@ -159,6 +159,7 @@ private:
         {
             Ray scattered;
             Color attenuation;
+
             if (hit_record.material->Scatter(ray, hit_record, attenuation, scattered))
             {
                 return attenuation * RayColor(scattered, depth - 1, world);

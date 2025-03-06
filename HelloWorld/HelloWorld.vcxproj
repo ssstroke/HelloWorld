@@ -139,6 +139,8 @@
     <ClCompile Include="HelloWorld.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AABB.hpp" />
+    <ClInclude Include="BVH.hpp" />
     <ClInclude Include="Camera.hpp" />
     <ClInclude Include="Color.hpp" />
     <ClInclude Include="Hittable.hpp" />
