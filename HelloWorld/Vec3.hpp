@@ -60,6 +60,16 @@ public:
         constexpr auto s = 1e-8;
         return (std::abs(e[0]) < s) && (std::abs(e[1]) < s) && (std::abs(e[2]) < s);
     }
+
+    static Vec3 Random()
+    {
+        return Vec3(RandomDouble(), RandomDouble(), RandomDouble());
+    }
+
+    static Vec3 Random(const double min, const double max)
+    {
+        return Vec3(RandomDouble(min, max), RandomDouble(min, max), RandomDouble(min, max));
+    }
 };
 
 using Point3 = Vec3;
@@ -118,21 +128,11 @@ inline Vec3 UnitVector(const Vec3& v)
     return v / v.Length();
 }
 
-Vec3 Random()
-{
-    return Vec3(RandomDouble(), RandomDouble(), RandomDouble());
-}
-
-Vec3 Random(const double min, const double max)
-{
-    return Vec3(RandomDouble(min, max), RandomDouble(min, max), RandomDouble(min, max));
-}
-
 inline Vec3 RandomUnitVector()
 {
     while (true)
     {
-        auto p = Random(-1, 1);
+        auto p = Vec3::Random(-1, 1);
         const auto lensq = p.LengthSquared();
         if (lensq > 1e-160 && lensq <= 1)
         {

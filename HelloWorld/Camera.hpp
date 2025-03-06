@@ -23,8 +23,8 @@ public:
 
     Point3 origin            = Point3(0, 0, 0);
     Vec3   direction         = Vec3(0, 0, -1);
-    Vec3   vup               = Vec3(0, 1, 0);    // Camera-relative "up" direction
-    double v_fov             = 90;               // Vertical view angle (field of view)
+    Vec3   direction_up               = Vec3(0, 1, 0);    // Camera-relative "up" direction
+    double fov_vertical             = 90;               // Vertical view angle (field of view)
 
     double defocus_angle     = 0;                // Variation angle of rays through each pixel
     double focus_distance    = 10;               // Distance from camera origin to plane of perfect focus
@@ -89,14 +89,14 @@ private:
         this->aspect_ratio = (double)this->image_width / (double)this->image_height;
 
         // Viewport dimensions.
-        const auto theta = DegreesToRadians(this->v_fov);
+        const auto theta = DegreesToRadians(this->fov_vertical);
         const auto h = std::tan(theta / 2);
         const auto viewport_height = 2 * h * this->focus_distance;
         const auto viewport_width = viewport_height * this->aspect_ratio;
 
         // Calculate u, v, w.
         this->w = -this->direction;
-        this->u = UnitVector(Cross(this->vup, this->w));
+        this->u = UnitVector(Cross(this->direction_up, this->w));
         this->v = Cross(this->w, this->u);
 
         // Calculate the vectors across the horizontal and down the vertical viewport edges.
