@@ -1,13 +1,18 @@
-#pragma once
+﻿#pragma once
 
 #include "Color.hpp"
 #include "Hittable.hpp"
 #include "Ray.hpp"
 #include "RTWeekend.hpp"
+#include "Texture.hpp"
 #include "Vec3.hpp"
 
 #include <cmath>
+#include <memory>
 #include <utility>
+
+using std::make_shared;
+using std::shared_ptr;
 
 class Material
 {
@@ -23,7 +28,9 @@ public:
 class Mat_Lambertian : public Material
 {
 public:
-    Mat_Lambertian(const Color& albedo) : albedo(albedo) {}
+    Mat_Lambertian(const Color& albedo) : texture(make_shared<Tex_SolidColor>(albedo)) {}
+
+    Mat_Lambertian(const shared_ptr<Texture> texture) : texture(texture) {}
 
     bool Scatter(const Ray& ray_in, const HitRecord& hit_record, Color& attenuation, Ray& scattered) const override
     {
@@ -34,13 +41,13 @@ public:
         }
 
         scattered = Ray(hit_record.point, scatter_direction, ray_in.Time());
-        attenuation = albedo;
+        attenuation = texture->Value(hit_record.u, hit_record.v, hit_record.point);
 
         return true;
     }
 
 private:
-    Color albedo;
+    shared_ptr<Texture> texture;
 };
 
 class Mat_Metal : public Material
@@ -71,7 +78,7 @@ public:
 
     bool Scatter(const Ray& ray_in, const HitRecord& hit_record, Color& attenuation, Ray& scattered) const override
     {
-        // Attenuation is always 1 � the glass surface absorbs nothing.
+        // Attenuation is always 1 — the glass surface absorbs nothing.
         attenuation = Color(1, 1, 1);
 
         const double ri = hit_record.front_face ? (1.0 / this->refraction_index) : this->refraction_index;

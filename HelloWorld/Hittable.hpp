@@ -22,7 +22,7 @@ public:
     Point3 point;
 
     Vec3 normal;
-    bool front_face;
+    bool front_face = false;
 
     double t = 0;
 
