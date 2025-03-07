@@ -11,6 +11,9 @@
 #include <utility>
 #include <vector>
 
+using std::make_shared;
+using std::shared_ptr;
+
 class Material;
 
 class HitRecord
@@ -21,9 +24,12 @@ public:
     Vec3 normal;
     bool front_face;
 
-    double t;
+    double t = 0;
 
-    std::shared_ptr<Material> material;
+    shared_ptr<Material> material;
+
+    double u = 0;
+    double v = 0;
 
     // NOTE: `outward_normal` is assumed to have unit length.
     void SetFaceNormal(const Ray& ray, const Vec3& outward_normal)
@@ -46,16 +52,16 @@ public:
 class Hit_List : public Hittable
 {
 public:
-    std::vector<std::shared_ptr<Hittable>> objects;
+    std::vector<shared_ptr<Hittable>> objects;
 
     Hit_List() {}
 
-    Hit_List(std::shared_ptr<Hittable> object)
+    Hit_List(shared_ptr<Hittable> object)
     {
         Add(object);
     }
 
-    void Add(const std::shared_ptr<Hittable> object)
+    void Add(const shared_ptr<Hittable> object)
     {
         objects.push_back(object);
         this->bbox = AABB(this->bbox, object->BBox());
@@ -115,7 +121,7 @@ public:
         // persist the resulting bounding volume hierarchy.
     }
 
-    Hit_BVHNode(std::vector<std::shared_ptr<Hittable>>& objects, size_t start, size_t end)
+    Hit_BVHNode(std::vector<shared_ptr<Hittable>>& objects, size_t start, size_t end)
     {
         this->bbox = AABB::Empty;
         for (size_t i = start; i < end; ++i)
@@ -147,8 +153,8 @@ public:
 
             const auto mid = start + object_span / 2;
 
-            left = std::make_shared<Hit_BVHNode>(objects, start, mid);
-            right = std::make_shared<Hit_BVHNode>(objects, mid, end);
+            left = make_shared<Hit_BVHNode>(objects, start, mid);
+            right = make_shared<Hit_BVHNode>(objects, mid, end);
         }
     }
 
@@ -171,26 +177,26 @@ public:
     }
 
 private:
-    std::shared_ptr<Hittable> left;
-    std::shared_ptr<Hittable> right;
+    shared_ptr<Hittable> left;
+    shared_ptr<Hittable> right;
     AABB bbox;
 
-    static bool BoxCompare(const std::shared_ptr<Hittable> a, const std::shared_ptr<Hittable> b, const int axis_index)
+    static bool BoxCompare(const shared_ptr<Hittable> a, const shared_ptr<Hittable> b, const int axis_index)
     {
         return a->BBox().AxisInterval(axis_index).min < b->BBox().AxisInterval(axis_index).min;
     }
 
-    static bool BoxCompareX(const std::shared_ptr<Hittable> a, const std::shared_ptr<Hittable> b)
+    static bool BoxCompareX(const shared_ptr<Hittable> a, const shared_ptr<Hittable> b)
     {
         return BoxCompare(a, b, 0);
     }
 
-    static bool BoxCompareY(const std::shared_ptr<Hittable> a, const std::shared_ptr<Hittable> b)
+    static bool BoxCompareY(const shared_ptr<Hittable> a, const shared_ptr<Hittable> b)
     {
         return BoxCompare(a, b, 1);
     }
 
-    static bool BoxCompareZ(const std::shared_ptr<Hittable> a, const std::shared_ptr<Hittable> b)
+    static bool BoxCompareZ(const shared_ptr<Hittable> a, const shared_ptr<Hittable> b)
     {
         return BoxCompare(a, b, 2);
     }
@@ -200,7 +206,7 @@ class Hit_Sphere : public Hittable
 {
 public:
     // Stationary sphere.
-    Hit_Sphere(const Point3& static_center, const double radius, const std::shared_ptr<Material> material) :
+    Hit_Sphere(const Point3& static_center, const double radius, const shared_ptr<Material> material) :
         center(static_center, Vec3(0, 0, 0)), radius(std::max(0.0, radius)), material(material)
     {
         const auto rvec = Vec3(radius, radius, radius);
@@ -208,7 +214,7 @@ public:
     }
 
     // Moving sphere.
-    Hit_Sphere(const Point3& center_0, const Point3& center_1, const double radius, const std::shared_ptr<Material> material) :
+    Hit_Sphere(const Point3& center_0, const Point3& center_1, const double radius, const shared_ptr<Material> material) :
         center(center_0, center_1 - center_0), radius(std::max(0.0, radius)), material(material)
     {
         const auto rvec = Vec3(radius, radius, radius);
@@ -266,7 +272,7 @@ public:
 private:
     AABB bbox;
 
-    std::shared_ptr<Material> material;
+    shared_ptr<Material> material;
 
     Ray center;
     double radius = 1;

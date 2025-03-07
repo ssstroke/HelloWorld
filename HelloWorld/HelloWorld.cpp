@@ -1,9 +1,13 @@
-﻿#include "RTWeekend.hpp"
-
-#include "Camera.hpp"
+﻿#include "Camera.hpp"
+#include "Color.hpp"
 #include "Hittable.hpp"
+#include "Material.hpp"
+#include "RTWeekend.hpp"
+#include "Vec3.hpp"
 
 #include <chrono>
+#include <iostream>
+#include <memory>
 
 using std::make_shared;
 using std::shared_ptr;
