@@ -66,4 +66,35 @@ public:
 
         return true;
     }
+
+    int LongestAxis() const
+    {
+        if (this->x.Size() > this->y.Size())
+        {
+            if (this->x.Size() > this->z.Size())
+            {
+                return 0;
+            }
+            else
+            {
+                return 2;
+            }
+        }
+        else
+        {
+            if (this->y.Size() > this->z.Size())
+            {
+                return 1;
+            }
+            else
+            {
+                return 2;
+            }
+        }
+    }
+
+    static const AABB Empty, Universe;
 };
+
+const AABB AABB::Empty    = AABB(Interval::Empty, Interval::Empty, Interval::Empty);
+const AABB AABB::Universe = AABB(Interval::Universe, Interval::Universe, Interval::Universe);

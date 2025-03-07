@@ -45,8 +45,8 @@ public:
         return Interval(this->min - padding, this->max + padding);
     }
 
-    static const Interval empty, universe;
+    static const Interval Empty, Universe;
 };
 
-const Interval Interval::empty    = Interval(+infinity, -infinity);
-const Interval Interval::universe = Interval(-infinity, +infinity);
+const Interval Interval::Empty    = Interval(+infinity, -infinity);
+const Interval Interval::Universe = Interval(-infinity, +infinity);

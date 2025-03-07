@@ -64,13 +64,13 @@ int main()
 
     Camera camera;
 
-    camera.image_filename = "output/output_long_render_many_spheres_with_motion_blur_bvh.png";
+    camera.image_filename = "output/output_long_render_many_spheres_with_motion_blur_bvh_new_subdiv_720p.png";
 
-    camera.image_width  = 400;
+    camera.image_width  = 1280;
     camera.image_height = (size_t)((double)camera.image_width / (16.0 / 9.0));
 
-    camera.samples_per_pixel = 100;
-    camera.max_depth         = 50;
+    camera.samples_per_pixel = 128;
+    camera.max_depth         = 32;
 
     camera.origin       = Point3(13, 2, 3);
     camera.direction    = UnitVector(-camera.origin);
