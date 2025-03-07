@@ -5,11 +5,16 @@
 
 #pragma once
 
+#include "Color.hpp"
 #include "Hittable.hpp"
-#include "Material.hpp"
 #include "Image.hpp"
+#include "Interval.hpp"
+#include "Material.hpp"
 #include "Ray.hpp"
+#include "RTWeekend.hpp"
+#include "Vec3.hpp"
 
+#include <cmath>
 #include <iostream>
 #include <string>
 
@@ -18,19 +23,20 @@ class Camera
 public:
     std::string image_filename = "output.png";
 
-    size_t image_width       = 100;              // Rendered image width in pixels
-    size_t image_height      = 100;              // Rendered image height in pixels
+    size_t image_width  = 100;  // Rendered image width in pixels
+    size_t image_height = 100;  // Rendered image height in pixels
 
-    Point3 origin            = Point3(0, 0, 0);
-    Vec3   direction         = Vec3(0, 0, -1);
-    Vec3   direction_up               = Vec3(0, 1, 0);    // Camera-relative "up" direction
-    double fov_vertical             = 90;               // Vertical view angle (field of view)
+    Point3 origin       = Point3(0, 0, 0);
+    Vec3   direction    = Vec3(0, 0, -1);
+    Vec3   direction_up = Vec3(0, 1, 0);  // Camera-relative "up" direction
 
-    double defocus_angle     = 0;                // Variation angle of rays through each pixel
-    double focus_distance    = 10;               // Distance from camera origin to plane of perfect focus
+    double fov_vertical = 90;  // Vertical view angle (field of view)
 
-    size_t samples_per_pixel = 10;               // Count of random samples for each pixel
-    size_t max_depth         = 10;               // Maximum number of ray bounces into scene
+    double defocus_angle  = 0;   // Variation angle of rays through each pixel
+    double focus_distance = 10;  // Distance from camera origin to plane of perfect focus
+
+    size_t samples_per_pixel = 10;  // Count of random samples for each pixel
+    size_t max_depth         = 10;  // Maximum number of ray bounces into scene
 
     Camera() {}
 
@@ -66,19 +72,19 @@ public:
     }
 
 private:
-    double aspect_ratio = 1.0;             // Ratio of image width over height
+    Image image = Image(this->image_width, this->image_height);
 
-    Point3 pixel00_location;               // Location of pixel (0, 0)
-    Vec3   pixel_delta_u;                  // Offset to pixel to the right
-    Vec3   pixel_delta_v;                  // Offset to pixel to the bottom
+    double aspect_ratio = 1.0;  // Ratio of image width over height
 
-    double pixel_samples_scale = 1;        // Color scale factor for a sum of pixel samples
+    Point3 pixel00_location;  // Location of pixel (0, 0)
+    Vec3   pixel_delta_u;     // Offset to pixel to the right
+    Vec3   pixel_delta_v;     // Offset to pixel to the bottom
 
-    Image  image = Image(this->image_width, this->image_height);
-     
-    Vec3   u, v, w;                        // Camera frame basis vectors (right, up, opposite view direction)
+    double pixel_samples_scale = 1;  // Color scale factor for a sum of pixel samples
 
-    Vec3   defocus_disk_u, defocus_disk_v; // Defocus disk horizontal, vertical radius
+    Vec3 u, v, w;                        // Camera frame basis vectors (right, up, opposite view direction)
+
+    Vec3 defocus_disk_u, defocus_disk_v; // Defocus disk horizontal, vertical radius
 
     void Initialize()
     {
@@ -100,7 +106,7 @@ private:
         this->v = Cross(this->w, this->u);
 
         // Calculate the vectors across the horizontal and down the vertical viewport edges.
-        const auto viewport_u =  this->u * viewport_width;
+        const auto viewport_u = this->u * viewport_width;
         const auto viewport_v = -this->v * viewport_height;
 
         // Calculate the horizontal and vertical delta vectors from pixel to pixel.
@@ -126,7 +132,7 @@ private:
             this->pixel00_location +
             ((x + offset.x()) * this->pixel_delta_u) +
             ((y + offset.y()) * this->pixel_delta_v);
-        
+
         const auto ray_origin = (defocus_angle <= 0) ? this->origin : DefocusDiskSample();
         const auto ray_direction = pixel_sample - ray_origin;
         const auto ray_time = RandomDouble();

@@ -3,6 +3,8 @@
 #include "Color.hpp"
 #include "Interval.hpp"
 
+#include <cassert>
+#include <cmath>
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -13,8 +15,7 @@
 
 class Image
 {
-public:
-    std::vector<uint8_t> data;
+public:    
     size_t width;
     size_t height;
 
@@ -63,4 +64,7 @@ public:
             (int)this->width * 3
         );
     }
+
+private:
+    std::vector<uint8_t> data;
 };

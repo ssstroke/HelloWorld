@@ -1,8 +1,9 @@
 #pragma once
 
 #include "Interval.hpp"
-#include "Vec3.hpp"
 #include "Ray.hpp"
+#include "Vec3.hpp"
+#include <utility>
 
 class AABB
 {
@@ -36,8 +37,8 @@ public:
 
     bool Hit(const Ray& ray, Interval ray_t) const
     {
-        const Point3& ray_origin    = ray.Origin();
-        const Vec3&   ray_direction = ray.Direction();
+        const Point3& ray_origin = ray.Origin();
+        const Vec3& ray_direction = ray.Direction();
 
         for (int axis = 0; axis < 3; ++axis)
         {
@@ -96,5 +97,5 @@ public:
     static const AABB Empty, Universe;
 };
 
-const AABB AABB::Empty    = AABB(Interval::Empty, Interval::Empty, Interval::Empty);
+const AABB AABB::Empty = AABB(Interval::Empty, Interval::Empty, Interval::Empty);
 const AABB AABB::Universe = AABB(Interval::Universe, Interval::Universe, Interval::Universe);

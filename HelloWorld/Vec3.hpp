@@ -1,6 +1,12 @@
 #pragma once
 
+#include "RTWeekend.hpp"
+
+#include <cmath>
+#include <cstdlib>
+#include <iosfwd>
 #include <iostream>
+#include <utility>
 
 class Vec3
 {
@@ -28,7 +34,7 @@ public:
 
     Vec3& operator-=(const Vec3& v)
     {
-        
+
         return *this += -v;
     }
 

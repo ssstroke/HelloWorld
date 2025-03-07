@@ -15,8 +15,8 @@ public:
     }
 
     const Vec3& Direction() const
-    { 
-        return this->direction; 
+    {
+        return this->direction;
     }
 
     Point3 At(const double t) const
@@ -32,5 +32,5 @@ public:
 private:
     Point3 origin;
     Vec3 direction;
-    double time;
+    double time = 0;
 };

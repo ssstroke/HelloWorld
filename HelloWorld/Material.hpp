@@ -2,6 +2,12 @@
 
 #include "Color.hpp"
 #include "Hittable.hpp"
+#include "Ray.hpp"
+#include "RTWeekend.hpp"
+#include "Vec3.hpp"
+
+#include <cmath>
+#include <utility>
 
 class Material
 {
@@ -14,10 +20,10 @@ public:
     }
 };
 
-class Lambertian : public Material
+class Mat_Lambertian : public Material
 {
 public:
-    Lambertian(const Color& albedo) : albedo(albedo) {}
+    Mat_Lambertian(const Color& albedo) : albedo(albedo) {}
 
     bool Scatter(const Ray& ray_in, const HitRecord& hit_record, Color& attenuation, Ray& scattered) const override
     {
@@ -37,10 +43,10 @@ private:
     Color albedo;
 };
 
-class Metal : public Material
+class Mat_Metal : public Material
 {
 public:
-    Metal(const Color& albedo, const double fuzz) : albedo(albedo), fuzz(fuzz) {}
+    Mat_Metal(const Color& albedo, const double fuzz) : albedo(albedo), fuzz(fuzz) {}
 
     bool Scatter(const Ray& ray_in, const HitRecord& hit_record, Color& attenuation, Ray& scattered) const override
     {
@@ -55,13 +61,13 @@ public:
 
 private:
     Color albedo;
-    double fuzz;
+    double fuzz = 0;
 };
 
-class Dielectric : public Material
+class Mat_Dielectric : public Material
 {
 public:
-    Dielectric(const double refraction_index) : refraction_index(refraction_index) {}
+    Mat_Dielectric(const double refraction_index) : refraction_index(refraction_index) {}
 
     bool Scatter(const Ray& ray_in, const HitRecord& hit_record, Color& attenuation, Ray& scattered) const override
     {
