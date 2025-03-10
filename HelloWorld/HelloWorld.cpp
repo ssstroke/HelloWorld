@@ -14,7 +14,7 @@
 using std::make_shared;
 using std::shared_ptr;
 
-static std::string image_filename = "output/default.png";
+static std::string image_filename;
 
 static void BouncingSpheres()
 {
@@ -68,7 +68,7 @@ static void BouncingSpheres()
     camera.image_filename = image_filename;
 
     camera.image_width  = 640;
-    camera.image_height = (size_t)((double)camera.image_width / (16.0 / 9.0));
+    camera.image_height = int(double(camera.image_width) / (16.0 / 9.0));
 
     camera.samples_per_pixel = 96;
     camera.max_depth         = 32;
@@ -98,7 +98,7 @@ static void CheckeredSpheres()
     camera.image_filename = image_filename;
 
     camera.image_width = 400;
-    camera.image_height = (size_t)((double)camera.image_width / (16.0 / 9.0));
+    camera.image_height = int(double(camera.image_width) / (16.0 / 9.0));
 
     camera.samples_per_pixel = 64;
     camera.max_depth = 32;
@@ -113,17 +113,51 @@ static void CheckeredSpheres()
     camera.Render(world);
 }
 
+static void Earth()
+{
+    Hit_List world;
+
+    const auto tex_earth = make_shared<Tex_Image>("assets/zloisham.jpg");
+    const auto mat_earth = make_shared<Mat_Lambertian>(tex_earth);
+    const auto hit_earth = make_shared<Hit_Sphere>(Point3(0, 0, 0), 2, mat_earth);
+    world.Add(hit_earth);
+
+    const auto material3 = make_shared<Mat_Metal>(Color(0.7, 0.6, 0.5), 0.0);
+    world.Add(make_shared<Hit_Sphere>(Point3(4, 0, -2), 2, material3));
+
+    Camera camera;
+
+    camera.image_filename = image_filename;
+
+    camera.image_width = 400;
+    camera.image_height = int(double(camera.image_width) / (16.0 / 9.0));
+
+    camera.samples_per_pixel = 64;
+    camera.max_depth = 32;
+
+    camera.origin = Point3(4, 3, 12);
+    camera.direction = UnitVector(-camera.origin);
+    camera.direction_up = Vec3(0, 1, 0);
+    camera.fov_vertical = 20;
+
+    camera.defocus_angle = 0;
+
+    camera.Render(world);
+}
+
 int main()
 {
     const auto start = std::chrono::high_resolution_clock::now();
 
-    image_filename = "output/checkered-spheres_scale-048.png";
+    image_filename = "output/zloisham.png";
 
-    switch (2)
+    switch (3)
     {
     case 1: BouncingSpheres();
         break;
     case 2: CheckeredSpheres();
+        break;
+    case 3: Earth();
         break;
     }
 

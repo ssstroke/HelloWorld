@@ -3,6 +3,7 @@
 #include "AABB.hpp"
 #include "Interval.hpp"
 #include "Ray.hpp"
+#include "RTWeekend.hpp"
 #include "Vec3.hpp"
 
 #include <algorithm>
@@ -223,7 +224,7 @@ public:
         this->bbox = AABB(bbox_0, bbox_1);
     }
 
-    bool Hit(const Ray& ray, const Interval ray_t, HitRecord& record) const override
+    bool Hit(const Ray& ray, const Interval ray_t, HitRecord& hit_record) const override
     {
         const Point3 current_center = center.At(ray.Time());
 
@@ -252,14 +253,16 @@ public:
             }
         }
 
-        record.t = root;
+        hit_record.t = root;
 
-        record.point = ray.At(record.t);
+        hit_record.point = ray.At(hit_record.t);
 
-        const auto outward_normal = (record.point - current_center) / radius;
-        record.SetFaceNormal(ray, outward_normal);
+        const auto outward_normal = (hit_record.point - current_center) / radius;
+        hit_record.SetFaceNormal(ray, outward_normal);
 
-        record.material = this->material;
+        GetUV(outward_normal, hit_record.u, hit_record.v);
+
+        hit_record.material = this->material;
 
         return true;
     }
@@ -276,4 +279,20 @@ private:
 
     Ray center;
     double radius = 1;
+
+    static void GetUV(const Point3& p, double& u, double& v)
+    {
+        // p: a given point on the sphere of radius one, centered at the origin.
+        // u: returned value [0, 1] of angle around the Y axis from X = -1.
+        // v: returned value [0, 1] of angle from Y = -1 to Y = +1.
+        //     <1 0 0> yields <0.50 0.50>       <-1  0  0> yields <0.00 0.50>
+        //     <0 1 0> yields <0.50 1.00>       < 0 -1  0> yields <0.50 0.00>
+        //     <0 0 1> yields <0.25 0.50>       < 0  0 -1> yields <0.75 0.50>
+
+        const auto theta = std::acos(-p.y());
+        const auto phi = std::atan2(-p.z(), p.x()) + pi;
+
+        u = phi / (2 * pi);
+        v = theta / pi;
+    }
 };

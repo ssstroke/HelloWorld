@@ -21,22 +21,22 @@
 class Camera
 {
 public:
-    std::string image_filename = "output.png";
+    std::string image_filename = "output/default.png";
 
-    size_t image_width  = 100;  // Rendered image width in pixels
-    size_t image_height = 100;  // Rendered image height in pixels
+    int image_width  = 100;  // Rendered image width in pixels
+    int image_height = 100;  // Rendered image height in pixels
 
-    Point3 origin       = Point3(0, 0, 0);
+    Point3 origin       = Point3(0, 0, 0);  
     Vec3   direction    = Vec3(0, 0, -1);
-    Vec3   direction_up = Vec3(0, 1, 0);  // Camera-relative "up" direction
+    Vec3   direction_up = Vec3(0, 1, 0);    // Camera-relative "up" direction
 
     double fov_vertical = 90;  // Vertical view angle (field of view)
 
     double defocus_angle  = 0;   // Variation angle of rays through each pixel
     double focus_distance = 10;  // Distance from camera origin to plane of perfect focus
 
-    size_t samples_per_pixel = 10;  // Count of random samples for each pixel
-    size_t max_depth         = 10;  // Maximum number of ray bounces into scene
+    int samples_per_pixel = 10;  // Count of random samples for each pixel
+    int max_depth         = 10;  // Maximum number of ray bounces into scene
 
     Camera() {}
 
@@ -44,10 +44,10 @@ public:
     {
         this->Initialize();
 
-        for (size_t h = 0; h < this->image_height; ++h)
+        for (int h = 0; h < this->image_height; ++h)
         {
             std::clog << "Scanline " << h << " out of " << this->image_height - 1 << ".\n";
-            for (size_t w = 0; w < this->image_width; ++w)
+            for (int w = 0; w < this->image_width; ++w)
             {
                 Color pixel_color(0, 0, 0);
 
@@ -122,7 +122,7 @@ private:
         this->defocus_disk_v = v * defocus_radius;
     }
 
-    Ray GetRay(const size_t x, const size_t y) const
+    Ray GetRay(const int x, const int y) const
     {
         // Construct a camera ray origintating from the defocused disk and directed
         // at randomly sampled point around the pixel location (x, y).
@@ -152,7 +152,7 @@ private:
         return this->origin + (p.x() * this->defocus_disk_u) + (p.y() * this->defocus_disk_v);
     }
 
-    Color RayColor(const Ray& ray, const size_t depth, const Hittable& world) const
+    Color RayColor(const Ray& ray, const int depth, const Hittable& world) const
     {
         if (depth < 1)
         {

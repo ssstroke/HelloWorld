@@ -1,10 +1,13 @@
 #pragma once
 
 #include "Color.hpp"
+#include "Image.hpp"
+#include "Interval.hpp"
 #include "Vec3.hpp"
 
 #include <cmath>
 #include <memory>
+#include <string>
 
 using std::make_shared;
 using std::shared_ptr;
@@ -63,4 +66,30 @@ private:
 
     shared_ptr<Texture> even;
     shared_ptr<Texture> odd;
+};
+
+class Tex_Image : public Texture
+{
+public:
+    Tex_Image(const std::string& filename) : image(filename) {}
+
+    Color Value(double u, double v, const Point3& p) const override
+    {
+        // Return cyan if texture is missing.
+        if (this->image.height <= 0) return Color(0, 1, 1);
+
+        u = Interval(0, 1).Clamp(u);
+        v = 1.0 - Interval(0, 1).Clamp(v);
+
+        const auto i = int(u * image.width);
+        const auto j = int(v * image.height);
+        const auto pixel = image.PixelData(i, j);
+
+        const auto color_scale = 1.0 / 255.0;
+
+        return Color(color_scale * pixel[0], color_scale * pixel[1], color_scale * pixel[2]);
+    }
+
+private:
+    Image image;
 };
