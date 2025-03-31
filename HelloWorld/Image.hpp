@@ -122,9 +122,11 @@ private:
         const size_t total_bytes = size_t(this->width) * this->height * this->bytes_per_pixel;
         this->data.resize(total_bytes);
 
-        for (size_t i = 0; i < total_bytes; ++i, ++fdata)
+        float* fdata_ptr = fdata;
+
+        for (size_t i = 0; i < total_bytes; ++i, ++fdata_ptr)
         {
-            this->data[i] = FloatToByte(*fdata);
+            this->data[i] = FloatToByte(*fdata_ptr);
         }
     }
 
