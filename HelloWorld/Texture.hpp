@@ -3,6 +3,7 @@
 #include "Color.hpp"
 #include "Image.hpp"
 #include "Interval.hpp"
+#include "Perlin.hpp"
 #include "Vec3.hpp"
 
 #include <cmath>
@@ -66,6 +67,20 @@ private:
 
     shared_ptr<Texture> even;
     shared_ptr<Texture> odd;
+};
+
+class Tex_Perlin : public Texture
+{
+public:
+    Tex_Perlin() {}
+
+    Color Value(const double u, const double v, const Point3& p) const override
+    {
+        return Color(1, 1, 1) * perlin.Noise(p);
+    }
+
+private:
+    Perlin perlin;
 };
 
 class Tex_Image : public Texture

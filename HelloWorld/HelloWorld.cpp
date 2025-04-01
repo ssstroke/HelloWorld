@@ -145,19 +145,55 @@ static void Earth()
     camera.Render(world);
 }
 
+static void PerlinSpheres()
+{
+    Hit_List world;
+
+    const auto tex_perlin = make_shared<Tex_Perlin>();
+    const auto mat_perlin = make_shared<Mat_Lambertian>(tex_perlin);
+    const auto hit_ground = make_shared<Hit_Sphere>(Point3(0, -1000, 0), 1000, mat_perlin);
+    const auto hit_sphere = make_shared<Hit_Sphere>(Point3(0, 2, 0), 2, mat_perlin);
+
+    world.Add(hit_ground);
+    world.Add(hit_sphere);
+
+    Camera camera;
+
+    camera.image_filename = image_filename;
+
+    camera.image_width = 400;
+    camera.image_height = int(double(camera.image_width) / (16.0 / 9.0));
+
+    camera.samples_per_pixel = 64;
+    camera.max_depth = 32;
+
+    camera.origin = Point3(4, 3, 12);
+    camera.direction = UnitVector(-camera.origin);
+    camera.direction_up = Vec3(0, 1, 0);
+    camera.fov_vertical = 20;
+
+    camera.defocus_angle = 0;
+
+    camera.Render(world);
+}
+
 int main()
 {
     const auto start = std::chrono::high_resolution_clock::now();
 
-    image_filename = "output/zloisham.png";
+    // Change switch case!
+    image_filename = "output/perlin.png";
 
-    switch (3)
+    // Change image_filename!
+    switch (4)
     {
     case 1: BouncingSpheres();
         break;
     case 2: CheckeredSpheres();
         break;
     case 3: Earth();
+        break;
+    case 4: PerlinSpheres();
         break;
     }
 
