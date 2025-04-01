@@ -26,9 +26,12 @@ public:
         //  etc. for each component. Then map Point(p) to space
         //  inside this 1x1 cube and interpolate.
 
-        const double u = p.x() - std::floor(p.x());
-        const double v = p.y() - std::floor(p.y());
-        const double w = p.z() - std::floor(p.z());
+        double u = p.x() - std::floor(p.x());
+        double v = p.y() - std::floor(p.y());
+        double w = p.z() - std::floor(p.z());
+        u = u * u * (3 - 2 * u);
+        v = v * v * (3 - 2 * v);
+        w = w * w * (3 - 2 * w);
 
         const int i = int(std::floor(p.x()));
         const int j = int(std::floor(p.y()));
