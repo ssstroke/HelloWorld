@@ -3,6 +3,8 @@
 #include "RTWeekend.hpp"
 #include "Vec3.hpp"
 
+#include <cmath>
+
 class Perlin
 {
 public:
@@ -19,10 +21,36 @@ public:
 
     double Noise(const Point3& p) const
     {
-        const auto x = int(4 * p.x()) & 255;
-        const auto y = int(4 * p.y()) & 255;
-        const auto z = int(4 * p.z()) & 255;
-        return random_doubles[perm_x[x] ^ perm_y[y] ^ perm_z[z]];
+        // Description: construct a 1x1 cube with points having
+        //  values of Perlin(floor(p.x()), Perlin(floor(p.x() + 1)
+        //  etc. for each component. Then map Point(p) to space
+        //  inside this 1x1 cube and interpolate.
+
+        const double u = p.x() - std::floor(p.x());
+        const double v = p.y() - std::floor(p.y());
+        const double w = p.z() - std::floor(p.z());
+
+        const int i = int(std::floor(p.x()));
+        const int j = int(std::floor(p.y()));
+        const int k = int(std::floor(p.z()));
+        double c[2][2][2];
+
+        for (int di = 0; di < 2; ++di)
+        {
+            for (int dj = 0; dj < 2; ++dj)
+            {
+                for (int dk = 0; dk < 2; ++dk)
+                {
+                    c[di][dj][dk] = random_doubles[
+                        perm_x[(i + di) & 0b11111111] ^
+                        perm_y[(j + dj) & 0b11111111] ^
+                        perm_z[(k + dk) & 0b11111111]
+                    ];
+                }
+            }
+        }
+
+        return TrilinearInterpolation(c, u, v, w);
     }
 
 private:
@@ -50,5 +78,24 @@ private:
             p[i] = p[target];
             p[target] = tmp;
         }
+    }
+
+    static double TrilinearInterpolation(const double c[2][2][2], const double u, const double v, const double w)
+    {
+        double result = 0;
+        for (int i = 0; i < 2; ++i)
+        {
+            for (int j = 0; j < 2; ++j)
+            {
+                for (int k = 0; k < 2; ++k)
+                {
+                    result += c[i][j][k] *
+                        (i * u + (1 - i) * (1 - u)) *
+                        (j * v + (1 - j) * (1 - v)) *
+                        (k * w + (1 - k) * (1 - w));
+                }
+            }
+        }
+        return result;
     }
 };

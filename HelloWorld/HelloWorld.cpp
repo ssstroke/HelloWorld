@@ -182,7 +182,7 @@ int main()
     const auto start = std::chrono::high_resolution_clock::now();
 
     // Change switch case!
-    image_filename = "output/perlin.png";
+    image_filename = "output/perlin_smooth.png";
 
     // Change image_filename!
     switch (4)
