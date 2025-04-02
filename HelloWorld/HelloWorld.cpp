@@ -149,7 +149,7 @@ static void PerlinSpheres()
 {
     Hit_List world;
 
-    const auto tex_perlin = make_shared<Tex_Perlin>();
+    const auto tex_perlin = make_shared<Tex_Perlin>(4);
     const auto mat_perlin = make_shared<Mat_Lambertian>(tex_perlin);
     const auto hit_ground = make_shared<Hit_Sphere>(Point3(0, -1000, 0), 1000, mat_perlin);
     const auto hit_sphere = make_shared<Hit_Sphere>(Point3(0, 2, 0), 2, mat_perlin);
@@ -182,7 +182,7 @@ int main()
     const auto start = std::chrono::high_resolution_clock::now();
 
     // Change switch case!
-    image_filename = "output/perlin_smooth_hermitian.png";
+    image_filename = "output/perlin_vecs-on-lattice-points.png";
 
     // Change image_filename!
     switch (4)
