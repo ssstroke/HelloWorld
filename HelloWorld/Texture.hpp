@@ -76,7 +76,7 @@ public:
 
     Color Value(const double u, const double v, const Point3& p) const override
     {
-        return Color(0.5, 0.5, 0.5) * (1.0 + perlin.Noise(p * scale));
+        return Color(1, 1, 1) * perlin.Turbulence(p, 7);
     }
 
 private:

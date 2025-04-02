@@ -4,6 +4,7 @@
 #include "Vec3.hpp"
 
 #include <cmath>
+#include <cstdlib>
 
 class Perlin
 {
@@ -51,6 +52,22 @@ public:
         }
 
         return PerlinInterpolation(c, u, v, w);
+    }
+
+    double Turbulence(const Point3& p, const int depth) const
+    {
+        double result = 0;
+        Point3 p_temp = p;
+        double weight = 1;
+
+        for (int i = 0; i < depth; ++i)
+        {
+            result += weight * Noise(p_temp);
+            weight *= 0.5;
+            p_temp *= 2;
+        }
+
+        return std::abs(result);
     }
 
 private:
