@@ -3,6 +3,7 @@
 #include "Interval.hpp"
 #include "Ray.hpp"
 #include "Vec3.hpp"
+
 #include <utility>
 
 class AABB
@@ -12,13 +13,18 @@ public:
 
     AABB() {}
 
-    AABB(const Interval& x, const Interval& y, const Interval& z) : x(x), y(y), z(z) {}
+    AABB(const Interval& x, const Interval& y, const Interval& z) : x(x), y(y), z(z)
+    {
+        PadToMinimus();
+    }
 
     AABB(const Point3& a, const Point3& b)
     {
         this->x = (a[0] <= b[0]) ? Interval(a[0], b[0]) : Interval(b[0], a[0]);
         this->y = (a[1] <= b[1]) ? Interval(a[1], b[1]) : Interval(b[1], a[1]);
         this->z = (a[2] <= b[2]) ? Interval(a[2], b[2]) : Interval(b[2], a[2]);
+
+        PadToMinimus();
     }
 
     AABB(const AABB& a, const AABB& b)
@@ -95,6 +101,15 @@ public:
     }
 
     static const AABB Empty, Universe;
+
+private:
+    void PadToMinimus()
+    {
+        const double delta = 0.0001;
+        if (x.Size() < delta) x = x.Expand(delta);
+        if (y.Size() < delta) y = y.Expand(delta);
+        if (z.Size() < delta) z = z.Expand(delta);
+    }
 };
 
 const AABB AABB::Empty = AABB(Interval::Empty, Interval::Empty, Interval::Empty);

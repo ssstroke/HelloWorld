@@ -8,6 +8,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstdlib>
 #include <memory>
 #include <utility>
 #include <vector>
@@ -274,9 +275,9 @@ public:
     }
 
 private:
+    shared_ptr<Material> material;
     AABB bbox;
 
-    shared_ptr<Material> material;
 
     Ray center;
     double radius = 1;
@@ -296,4 +297,74 @@ private:
         u = phi / (2 * pi);
         v = theta / pi;
     }
+};
+
+class Hit_Quad : public Hittable
+{
+public:
+    Hit_Quad(const Point3& q, const Vec3& u, const Vec3& v, shared_ptr<Material> material) :
+        q(q), u(u), v(v), material(material)
+    {
+        const Vec3 n = Cross(u, v);
+        this->normal = UnitVector(n);
+        this->d = Dot(normal, q);
+        this->w = n / Dot(n, n);
+
+        SetBBox();
+    }
+
+    virtual void SetBBox()
+    {
+        this->bbox = AABB(AABB(q, q + u + v), AABB(q + u, q + v));
+    }
+
+    AABB BBox() const override
+    {
+        return this->bbox;
+    }
+
+    bool Hit(const Ray& ray, const Interval ray_t, HitRecord& hit_record) const override
+    {
+        const double denominator = Dot(this->normal, ray.Direction());
+        if (std::abs(denominator) < 1e-8)
+            // Ray is parallel to plane.
+        {
+            return false;
+        }
+
+        const double t = (this->d - Dot(this->normal, ray.Origin())) / denominator;
+        if (ray_t.Contains(t) == false)
+        {
+            return false;
+        }
+        
+        const Point3 intersection = ray.At(t);
+        const Vec3 planar_intersection = intersection - this->q;
+        const double alpha = Dot(this->w, Cross(planar_intersection, v));
+        const double beta  = Dot(this->w, Cross(u, planar_intersection));
+        const Interval unit_interval = Interval(0, 1);
+        if (unit_interval.Contains(alpha) == false || unit_interval.Contains(beta) == false)
+        {
+            return false;
+        }
+        hit_record.u = alpha;
+        hit_record.v = beta;
+
+        hit_record.t = t;
+        hit_record.point = intersection;
+        hit_record.material = material;
+        hit_record.SetFaceNormal(ray, this->normal);
+
+        return true;
+    }
+
+private:
+    shared_ptr<Material> material;
+    AABB bbox;
+
+    Point3 q;
+    Vec3 u, v;
+    Vec3 normal;
+    double d;
+    Vec3 w;
 };
