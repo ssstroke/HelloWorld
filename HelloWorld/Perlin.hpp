@@ -99,9 +99,9 @@ private:
 
     static double PerlinInterpolation(const Vec3 c[2][2][2], const double u, const double v, const double w)
     {
-        const auto uu = u * u * (3 - 2 * u);
-        const auto vv = v * v * (3 - 2 * v);
-        const auto ww = w * w * (3 - 2 * w);
+        const double uu = u * u * (3 - 2 * u);
+        const double vv = v * v * (3 - 2 * v);
+        const double ww = w * w * (3 - 2 * w);
 
         double result = 0;
 

@@ -29,7 +29,7 @@ public:
     // Load an image by specified <filename>.
     Image(const std::string& filename)
     {
-        auto n = this->bytes_per_pixel;
+        int n = this->bytes_per_pixel;
         this->fdata = stbi_loadf(filename.c_str(), &this->width, &this->height, &n, this->bytes_per_pixel);
         if (this->fdata == nullptr)
         {
@@ -61,9 +61,9 @@ public:
 
     void WriteColor(const int x, const int y, const Color& color)
     {
-        const auto r = LinearToGamma(color.x());
-        const auto g = LinearToGamma(color.y());
-        const auto b = LinearToGamma(color.z());
+        const double r = LinearToGamma(color.x());
+        const double g = LinearToGamma(color.y());
+        const double b = LinearToGamma(color.z());
 
         static const Interval intensity(0.000, 0.999);
 

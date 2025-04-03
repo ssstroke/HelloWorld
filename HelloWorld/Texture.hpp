@@ -7,6 +7,7 @@
 #include "Vec3.hpp"
 
 #include <cmath>
+#include <cstdint>
 #include <memory>
 #include <string>
 
@@ -48,9 +49,9 @@ public:
 
     Color Value(const double u, const double v, const Point3& p) const override
     {
-        const auto floor_x = int(std::floor(p.x() * this->inv_scale));
-        const auto floor_y = int(std::floor(p.y() * this->inv_scale));
-        const auto floor_z = int(std::floor(p.z() * this->inv_scale));
+        const int floor_x = int(std::floor(p.x() * this->inv_scale));
+        const int floor_y = int(std::floor(p.y() * this->inv_scale));
+        const int floor_z = int(std::floor(p.z() * this->inv_scale));
 
         if ((floor_x + floor_y + floor_z) % 2 == 0)
         {
@@ -97,11 +98,11 @@ public:
         u = Interval(0, 1).Clamp(u);
         v = 1.0 - Interval(0, 1).Clamp(v);
 
-        const auto i = int(u * image.width);
-        const auto j = int(v * image.height);
-        const auto pixel = image.PixelData(i, j);
+        const int i = int(u * image.width);
+        const int j = int(v * image.height);
+        const uint8_t* pixel = image.PixelData(i, j);
 
-        const auto color_scale = 1.0 / 255.0;
+        constexpr double color_scale = 1.0 / 255.0;
 
         return Color(color_scale * pixel[0], color_scale * pixel[1], color_scale * pixel[2]);
     }

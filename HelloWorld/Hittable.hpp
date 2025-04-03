@@ -82,9 +82,9 @@ public:
     {
         HitRecord temp_record;
         bool hit_anything = false;
-        auto closest_so_far = ray_t.max;
+        double closest_so_far = ray_t.max;
 
-        for (const auto& object : objects)
+        for (const shared_ptr<Hittable>& object : objects)
         {
             if (object->Hit(ray, Interval(ray_t.min, closest_so_far), temp_record))
             {
@@ -132,6 +132,7 @@ public:
 
         const int axis = this->bbox.LongestAxis();
 
+        // This is a function pointer.
         const auto comparator =
             (axis == 0) ? BoxCompareX :
             (axis == 1) ? BoxCompareY :
@@ -152,7 +153,7 @@ public:
         {
             std::sort(std::begin(objects) + start, std::begin(objects) + end, comparator);
 
-            const auto mid = start + object_span / 2;
+            const size_t mid = start + object_span / 2;
 
             left = make_shared<Hit_BVHNode>(objects, start, mid);
             right = make_shared<Hit_BVHNode>(objects, mid, end);
@@ -210,7 +211,7 @@ public:
     Hit_Sphere(const Point3& static_center, const double radius, const shared_ptr<Material> material) :
         center(static_center, Vec3(0, 0, 0)), radius(std::max(0.0, radius)), material(material)
     {
-        const auto rvec = Vec3(radius, radius, radius);
+        const Vec3 rvec = Vec3(radius, radius, radius);
         this->bbox = AABB(static_center - rvec, static_center + rvec);
     }
 
@@ -218,7 +219,7 @@ public:
     Hit_Sphere(const Point3& center_0, const Point3& center_1, const double radius, const shared_ptr<Material> material) :
         center(center_0, center_1 - center_0), radius(std::max(0.0, radius)), material(material)
     {
-        const auto rvec = Vec3(radius, radius, radius);
+        const Vec3 rvec = Vec3(radius, radius, radius);
         const AABB bbox_0(center.At(0) - rvec, center.At(0) + rvec);
         const AABB bbox_1(center.At(1) - rvec, center.At(1) + rvec);
         this->bbox = AABB(bbox_0, bbox_1);
@@ -230,23 +231,23 @@ public:
 
         const Vec3 OC = current_center - ray.Origin();
 
-        const auto A = ray.Direction().LengthSquared();
-        const auto H = Dot(ray.Direction(), OC);
-        const auto C = OC.LengthSquared() - radius * radius;
+        const double a = ray.Direction().LengthSquared();
+        const double h = Dot(ray.Direction(), OC);
+        const double c = OC.LengthSquared() - radius * radius;
 
-        const auto DISCRIMINANT = H * H - A * C;
-        if (DISCRIMINANT < 0)
+        const double discriminant = h * h - a * c;
+        if (discriminant < 0)
         {
             return false;
         }
 
-        const auto SQRT_DISCRIMINANT = std::sqrt(DISCRIMINANT);
+        const double sqrt_discriminant = std::sqrt(discriminant);
 
         // Find the nearest root that lies in the acceptable range.
-        auto root = (H - SQRT_DISCRIMINANT) / A;
+        double root = (h - sqrt_discriminant) / a;
         if (ray_t.Surrounds(root) == false)
         {
-            root = (H + SQRT_DISCRIMINANT) / A;
+            root = (h + sqrt_discriminant) / a;
             if (ray_t.Surrounds(root) == false)
             {
                 return false;
@@ -257,7 +258,7 @@ public:
 
         hit_record.point = ray.At(hit_record.t);
 
-        const auto outward_normal = (hit_record.point - current_center) / radius;
+        const Vec3 outward_normal = (hit_record.point - current_center) / radius;
         hit_record.SetFaceNormal(ray, outward_normal);
 
         GetUV(outward_normal, hit_record.u, hit_record.v);
@@ -289,8 +290,8 @@ private:
         //     <0 1 0> yields <0.50 1.00>       < 0 -1  0> yields <0.50 0.00>
         //     <0 0 1> yields <0.25 0.50>       < 0  0 -1> yields <0.75 0.50>
 
-        const auto theta = std::acos(-p.y());
-        const auto phi = std::atan2(-p.z(), p.x()) + pi;
+        const double theta = std::acos(-p.y());
+        const double phi = std::atan2(-p.z(), p.x()) + pi;
 
         u = phi / (2 * pi);
         v = theta / pi;

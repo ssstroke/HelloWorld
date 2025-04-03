@@ -34,7 +34,7 @@ public:
 
     bool Scatter(const Ray& ray_in, const HitRecord& hit_record, Color& attenuation, Ray& scattered) const override
     {
-        auto scatter_direction = hit_record.normal + RandomUnitVector();
+        Vec3 scatter_direction = hit_record.normal + RandomUnitVector();
         if (scatter_direction.NearZero())
         {
             scatter_direction = hit_record.normal;
@@ -113,7 +113,7 @@ private:
     static double Reflectance(const double cosine, const double refraction_index)
     {
         // Use Schlik's approximation for reflectance.
-        const auto r0 = std::pow((1 - refraction_index) / (1 + refraction_index), 2);
+        const double r0 = std::pow((1 - refraction_index) / (1 + refraction_index), 2);
         return r0 + (1 - r0) * std::pow((1 - cosine), 5);
     }
 };

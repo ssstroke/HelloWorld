@@ -63,7 +63,7 @@ public:
 
     bool NearZero() const
     {
-        constexpr auto s = 1e-8;
+        constexpr double s = 1e-8;
         return (std::abs(e[0]) < s) && (std::abs(e[1]) < s) && (std::abs(e[2]) < s);
     }
 
@@ -138,8 +138,8 @@ inline Vec3 RandomUnitVector()
 {
     while (true)
     {
-        auto p = Vec3::Random(-1, 1);
-        const auto lensq = p.LengthSquared();
+        const Vec3 p = Vec3::Random(-1, 1);
+        const double lensq = p.LengthSquared();
         if (lensq > 1e-160 && lensq <= 1)
         {
             return p / std::sqrt(lensq);
@@ -166,7 +166,7 @@ inline Vec3 RandomInUnitDisk()
 {
     while (true)
     {
-        const auto p = Vec3(RandomDouble(-1, 1), RandomDouble(-1, 1), 0);
+        const Vec3 p = Vec3(RandomDouble(-1, 1), RandomDouble(-1, 1), 0);
         if (p.LengthSquared() < 1)
         {
             return p;
@@ -182,7 +182,7 @@ inline Vec3 Reflect(const Vec3& v, const Vec3& n)
 inline Vec3 Refract(const Vec3& uv, const Vec3& n, const double etai_over_etat)
 {
     // Why use std::min()?
-    const auto cos_theta = std::min(Dot(-uv, n), 1.0);
+    const double cos_theta = std::min(Dot(-uv, n), 1.0);
 
     // NOTE: Given ray R it is possible to decompose it to R = R_perp + R_prll.
     // However, I have no idea what the code below is. I can understand how to

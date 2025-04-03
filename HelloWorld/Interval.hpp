@@ -43,7 +43,7 @@ public:
 
     Interval Expand(const double delta) const
     {
-        const auto padding = delta / 2;
+        const double padding = delta / 2;
         return Interval(this->min - padding, this->max + padding);
     }
 
