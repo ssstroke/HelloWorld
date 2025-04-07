@@ -246,15 +246,46 @@ static void Emission()
     camera.Render(world);
 }
 
+static void CornellBox()
+{
+    Hit_List world;
+
+    const auto mat_red   = make_shared<Mat_Lambertian>(Color(.65, .05, .05));
+    const auto mat_white = make_shared<Mat_Lambertian>(Color(.73, .73, .73));
+    const auto mat_green = make_shared<Mat_Lambertian>(Color(.12, .45, .15));
+    const auto mat_light = make_shared<Mat_DiffuseLight>(Color(16, 16, 16));
+
+    world.Add(make_shared<Hit_Quad>(Point3(555, 0, 0),     Vec3(0, 555, 0),  Vec3(0, 0, 555),  mat_green));
+    world.Add(make_shared<Hit_Quad>(Point3(0, 0, 0),       Vec3(0, 555, 0),  Vec3(0, 0, 555),  mat_red));
+    world.Add(make_shared<Hit_Quad>(Point3(343, 554, 332), Vec3(-130, 0, 0), Vec3(0, 0, -105), mat_light));
+    world.Add(make_shared<Hit_Quad>(Point3(0, 0, 0),       Vec3(555, 0, 0),  Vec3(0, 0, 555),  mat_white));
+    world.Add(make_shared<Hit_Quad>(Point3(555, 555, 555), Vec3(-555, 0, 0), Vec3(0, 0, -555), mat_white));
+    world.Add(make_shared<Hit_Quad>(Point3(0, 0, 555),     Vec3(555, 0, 0),  Vec3(0, 555, 0),  mat_white));
+
+    Camera camera;
+    camera.image_filename = image_filename;
+    camera.image_width = 640;
+    camera.image_height = 640;
+    camera.samples_per_pixel = 16;
+    camera.max_depth = 16;
+    camera.fov_vertical = 40;
+    camera.origin = Point3(278, 278, -800);
+    camera.direction = Vec3(0, 0, 1);
+    camera.direction_up = Vec3(0, 1, 0);
+    camera.defocus_angle = 0;
+    camera.background = Color(0, 0, 0);
+    camera.Render(world);
+}
+
 int main()
 {
     const auto start = std::chrono::high_resolution_clock::now();
 
     // Change switch case!
-    image_filename = "output/emission-1.png";
+    image_filename = "output/cornell-box.png";
 
     // Change image_filename!
-    switch (7)
+    switch (8)
     {
     case 1: BouncingSpheres();
         break;
@@ -269,6 +300,8 @@ int main()
     case 6: Tris();
         break;
     case 7: Emission();
+        break;
+    case 8: CornellBox();
         break;
     }
 
