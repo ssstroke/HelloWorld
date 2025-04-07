@@ -23,6 +23,11 @@ public:
     {
         return false;
     }
+
+    virtual Color Emit(const double u, const double v, const Point3& p) const
+    {
+        return Color(0, 0, 0);
+    }
 };
 
 class Mat_Lambertian : public Material
@@ -116,4 +121,19 @@ private:
         const double r0 = std::pow((1 - refraction_index) / (1 + refraction_index), 2);
         return r0 + (1 - r0) * std::pow((1 - cosine), 5);
     }
+};
+
+class Mat_DiffuseLight : public Material
+{
+public:
+    Mat_DiffuseLight(shared_ptr<Texture> tex) : texture(tex) {}
+    Mat_DiffuseLight(const Color& emit) : texture(make_shared<Tex_SolidColor>(emit)) {}
+
+    Color Emit(const double u, const double v, const Point3& p) const override
+    {
+        return texture->Value(u, v, p);
+    }
+
+private:
+    shared_ptr<Texture> texture;
 };

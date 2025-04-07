@@ -38,6 +38,8 @@ public:
     int samples_per_pixel = 10;  // Count of random samples for each pixel
     int max_depth         = 10;  // Maximum number of ray bounces into scene
 
+    Color background;  // Scene background color
+
     Camera() {}
 
     void Render(const Hittable& world)
@@ -161,17 +163,24 @@ private:
 
         HitRecord hit_record;
 
-        if (world.Hit(ray, Interval(0.001, infinity), hit_record))
+        if (world.Hit(ray, Interval(0.001, infinity), hit_record) == false)
+        {
+            return this->background;
+        }
+        else
         {
             Ray scattered;
             Color attenuation;
+            const Color color_emitted = hit_record.material->Emit(hit_record.u, hit_record.v, hit_record.point);
 
-            if (hit_record.material->Scatter(ray, hit_record, attenuation, scattered))
+            if (hit_record.material->Scatter(ray, hit_record, attenuation, scattered) == false)
             {
-                return attenuation * RayColor(scattered, depth - 1, world);
+                return color_emitted;
             }
+            
+            const Color color_scattered = attenuation * this->RayColor(scattered, depth - 1, world);
 
-            return Color(0, 0, 0);
+            return color_emitted + color_scattered;
         }
 
         // Background. 

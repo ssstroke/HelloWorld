@@ -75,6 +75,7 @@ static void BouncingSpheres()
     camera.fov_vertical = 20;
     camera.defocus_angle  = 0.6;
     camera.focus_distance = 10;
+    camera.background = Color(0.7, 0.8, 1);
     camera.Render(world);
 }
 
@@ -98,6 +99,7 @@ static void CheckeredSpheres()
     camera.direction_up = Vec3(0, 1, 0);
     camera.fov_vertical = 20;
     camera.defocus_angle = 0;
+    camera.background = Color(0.7, 0.8, 1);
     camera.Render(world);
 }
 
@@ -124,6 +126,7 @@ static void Earth()
     camera.direction_up = Vec3(0, 1, 0);
     camera.fov_vertical = 20;
     camera.defocus_angle = 0;
+    camera.background = Color(0.7, 0.8, 1);
     camera.Render(world);
 }
 
@@ -150,6 +153,7 @@ static void PerlinSpheres()
     camera.direction_up = Vec3(0, 1, 0);
     camera.fov_vertical = 20;
     camera.defocus_angle = 0;
+    camera.background = Color(0.7, 0.8, 1);
     camera.Render(world);
 }
 
@@ -180,6 +184,7 @@ static void Quads()
     camera.direction         = UnitVector(-camera.origin);
     camera.direction_up      = Vec3(0, 1, 0);
     camera.defocus_angle     = 0;
+    camera.background = Color(0.7, 0.8, 1);
     camera.Render(world);
 }
 
@@ -210,6 +215,33 @@ static void Tris()
     camera.direction = UnitVector(-camera.origin);
     camera.direction_up = Vec3(0, 1, 0);
     camera.defocus_angle = 0;
+    camera.background = Color(0.7, 0.8, 1);
+    camera.Render(world);
+}
+
+static void Emission()
+{
+    Hit_List world;
+
+    const auto tex_perlin = make_shared<Tex_Perlin>(4);
+    world.Add(make_shared<Hit_Sphere>(Point3(0, -1000, 0), 1000, make_shared<Mat_Lambertian>(tex_perlin)));
+    world.Add(make_shared<Hit_Sphere>(Point3(0, 2, 0), 2, make_shared<Mat_Lambertian>(tex_perlin)));
+
+    const auto mat_diffuseLight = make_shared<Mat_DiffuseLight>(Color(4, 4, 4));
+    world.Add(make_shared<Hit_Quad>(Point3(3, 1, -2), Vec3(2, 0, 0), Vec3(0, 2, 0), mat_diffuseLight));
+
+    Camera camera;
+    camera.image_filename = image_filename;
+    camera.image_width = 640;
+    camera.image_height = int(double(camera.image_width) / (16.0 / 9.0));
+    camera.samples_per_pixel = 64;
+    camera.max_depth = 32;
+    camera.fov_vertical = 20;
+    camera.origin = Point3(26, 3, 6);
+    camera.direction = UnitVector(-camera.origin + Vec3(0, 2, 0));
+    camera.direction_up = Vec3(0, 1, 0);
+    camera.defocus_angle = 0;
+    camera.background = Color(0, 0, 0);
     camera.Render(world);
 }
 
@@ -218,10 +250,10 @@ int main()
     const auto start = std::chrono::high_resolution_clock::now();
 
     // Change switch case!
-    image_filename = "output/tris.png";
+    image_filename = "output/emission.png";
 
     // Change image_filename!
-    switch (6)
+    switch (7)
     {
     case 1: BouncingSpheres();
         break;
@@ -234,6 +266,8 @@ int main()
     case 5: Quads();
         break;
     case 6: Tris();
+        break;
+    case 7: Emission();
         break;
     }
 
