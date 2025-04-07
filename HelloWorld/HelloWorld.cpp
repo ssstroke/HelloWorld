@@ -228,6 +228,7 @@ static void Emission()
     world.Add(make_shared<Hit_Sphere>(Point3(0, 2, 0), 2, make_shared<Mat_Lambertian>(tex_perlin)));
 
     const auto mat_diffuseLight = make_shared<Mat_DiffuseLight>(Color(4, 4, 4));
+    world.Add(make_shared<Hit_Sphere>(Point3(0, 7, 0), 2, mat_diffuseLight));
     world.Add(make_shared<Hit_Quad>(Point3(3, 1, -2), Vec3(2, 0, 0), Vec3(0, 2, 0), mat_diffuseLight));
 
     Camera camera;
@@ -250,7 +251,7 @@ int main()
     const auto start = std::chrono::high_resolution_clock::now();
 
     // Change switch case!
-    image_filename = "output/emission.png";
+    image_filename = "output/emission-1.png";
 
     // Change image_filename!
     switch (7)
