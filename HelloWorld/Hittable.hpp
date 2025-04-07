@@ -302,8 +302,8 @@ private:
 class Hit_Quad : public Hittable
 {
 public:
-    Hit_Quad(const Point3& q, const Vec3& u, const Vec3& v, shared_ptr<Material> material) :
-        q(q), u(u), v(v), material(material)
+    Hit_Quad(const Point3& _q, const Vec3& _u, const Vec3& _v, shared_ptr<Material> _material) :
+        q(_q), u(_u), v(_v), material(_material)
     {
         const Vec3 n = Cross(u, v);
         this->normal = UnitVector(n);
@@ -342,8 +342,8 @@ public:
         const Vec3 planar_intersection = intersection - this->q;
         const double alpha = Dot(this->w, Cross(planar_intersection, v));
         const double beta  = Dot(this->w, Cross(u, planar_intersection));
-        const Interval unit_interval = Interval(0, 1);
-        if (unit_interval.Contains(alpha) == false || unit_interval.Contains(beta) == false)
+
+        if (_Hit(alpha, beta) == false)
         {
             return false;
         }
@@ -358,7 +358,7 @@ public:
         return true;
     }
 
-private:
+protected:
     shared_ptr<Material> material;
     AABB bbox;
 
@@ -367,4 +367,31 @@ private:
     Vec3 normal;
     double d;
     Vec3 w;
+
+    virtual bool _Hit(const double alpha, const double beta) const
+    {
+        const Interval unit_interval = Interval(0, 1);
+        if (unit_interval.Contains(alpha) == false || unit_interval.Contains(beta) == false)
+        {
+            return false;
+        }
+        return true;
+    }
+};
+
+class Hit_Tri : public Hit_Quad
+{
+public:
+    Hit_Tri(const Point3& q, const Vec3& u, const Vec3& v, shared_ptr<Material> material) :
+        Hit_Quad(q, u, v, material) {}
+
+protected:
+    bool _Hit(const double alpha, const double beta) const override
+    {
+        if (alpha < 0 || beta < 0 || alpha + beta > 1)
+        {
+            return false;
+        }
+        return true;
+    }
 };

@@ -183,15 +183,45 @@ static void Quads()
     camera.Render(world);
 }
 
+static void Tris()
+{
+    Hit_List world;
+
+    shared_ptr<Mat_Lambertian> left_red = make_shared<Mat_Lambertian>(Color(1.0, 0.2, 0.2));
+    shared_ptr<Mat_Lambertian> back_green = make_shared<Mat_Lambertian>(Color(0.2, 1.0, 0.2));
+    shared_ptr<Mat_Lambertian> right_blue = make_shared<Mat_Lambertian>(Color(0.2, 0.2, 1.0));
+    shared_ptr<Mat_Lambertian> upper_orange = make_shared<Mat_Lambertian>(Color(1.0, 0.5, 0.0));
+    shared_ptr<Mat_Lambertian> lower_teal = make_shared<Mat_Lambertian>(Color(0.2, 0.8, 0.8));
+
+    world.Add(make_shared<Hit_Tri>(Point3(-3, -2, 5), Vec3(0, 0, -4), Vec3(0, 4, 0), left_red));
+    world.Add(make_shared<Hit_Tri>(Point3(-2, -2, 0), Vec3(4, 0, 0), Vec3(0, 4, 0), back_green));
+    world.Add(make_shared<Hit_Tri>(Point3(3, -2, 1), Vec3(0, 0, 4), Vec3(0, 4, 0), right_blue));
+    world.Add(make_shared<Hit_Tri>(Point3(-2, 3, 1), Vec3(4, 0, 0), Vec3(0, 0, 4), upper_orange));
+    world.Add(make_shared<Hit_Tri>(Point3(-2, -3, 5), Vec3(4, 0, 0), Vec3(0, 0, -4), lower_teal));
+
+    Camera camera;
+    camera.image_filename = image_filename;
+    camera.image_width = 640;
+    camera.image_height = int(double(camera.image_width) / (16.0 / 9.0));
+    camera.samples_per_pixel = 64;
+    camera.max_depth = 32;
+    camera.fov_vertical = 80;
+    camera.origin = Point3(0, 0, 9);
+    camera.direction = UnitVector(-camera.origin);
+    camera.direction_up = Vec3(0, 1, 0);
+    camera.defocus_angle = 0;
+    camera.Render(world);
+}
+
 int main()
 {
     const auto start = std::chrono::high_resolution_clock::now();
 
     // Change switch case!
-    image_filename = "output/quads.png";
+    image_filename = "output/tris.png";
 
     // Change image_filename!
-    switch (5)
+    switch (6)
     {
     case 1: BouncingSpheres();
         break;
@@ -202,6 +232,8 @@ int main()
     case 4: PerlinSpheres();
         break;
     case 5: Quads();
+        break;
+    case 6: Tris();
         break;
     }
 
