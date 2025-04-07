@@ -379,6 +379,30 @@ protected:
     }
 };
 
+inline shared_ptr<Hit_List> Box(const Point3& a, const Point3& b, const shared_ptr<Material> material)
+{
+    // Returns the 3D box (six sides) that contains the two opposite vertices a & b.
+
+    auto sides = make_shared<Hit_List>();
+
+    // Construct the two opposite vertices with the minimum and maximum coordinates.
+    const Point3 min = Point3(std::fmin(a.x(), b.x()), std::fmin(a.y(), b.y()), std::fmin(a.z(), b.z()));
+    const Point3 max = Point3(std::fmax(a.x(), b.x()), std::fmax(a.y(), b.y()), std::fmax(a.z(), b.z()));
+
+    const Vec3 dx = Vec3(max.x() - min.x(), 0, 0);
+    const Vec3 dy = Vec3(0, max.y() - min.y(), 0);
+    const Vec3 dz = Vec3(0, 0, max.z() - min.z());
+
+    sides->Add(make_shared<Hit_Quad>(Point3(min.x(), min.y(), max.z()), dx, dy, material)); // front
+    sides->Add(make_shared<Hit_Quad>(Point3(max.x(), min.y(), max.z()), -dz, dy, material)); // right
+    sides->Add(make_shared<Hit_Quad>(Point3(max.x(), min.y(), min.z()), -dx, dy, material)); // back
+    sides->Add(make_shared<Hit_Quad>(Point3(min.x(), min.y(), min.z()), dz, dy, material)); // left
+    sides->Add(make_shared<Hit_Quad>(Point3(min.x(), max.y(), max.z()), dx, -dz, material)); // top
+    sides->Add(make_shared<Hit_Quad>(Point3(min.x(), min.y(), min.z()), dx, dz, material)); // bottom
+
+    return sides;
+}
+
 class Hit_Tri : public Hit_Quad
 {
 public:

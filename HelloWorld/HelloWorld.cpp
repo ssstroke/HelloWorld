@@ -262,10 +262,13 @@ static void CornellBox()
     world.Add(make_shared<Hit_Quad>(Point3(555, 555, 555), Vec3(-555, 0, 0), Vec3(0, 0, -555), mat_white));
     world.Add(make_shared<Hit_Quad>(Point3(0, 0, 555),     Vec3(555, 0, 0),  Vec3(0, 555, 0),  mat_white));
 
+    world.Add(Box(Point3(130, 0, 65), Point3(295, 165, 230), mat_white));
+    world.Add(Box(Point3(265, 0, 295), Point3(430, 330, 460), mat_white));
+
     Camera camera;
     camera.image_filename = image_filename;
-    camera.image_width = 640;
-    camera.image_height = 640;
+    camera.image_width = 512;
+    camera.image_height = 512;
     camera.samples_per_pixel = 16;
     camera.max_depth = 16;
     camera.fov_vertical = 40;
@@ -282,7 +285,7 @@ int main()
     const auto start = std::chrono::high_resolution_clock::now();
 
     // Change switch case!
-    image_filename = "output/cornell-box.png";
+    image_filename = "output/cornell-box-1.png";
 
     // Change image_filename!
     switch (8)
