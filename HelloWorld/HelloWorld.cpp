@@ -255,6 +255,16 @@ static void CornellBox()
     const auto mat_green = make_shared<Mat_Lambertian>(Color(.12, .45, .15));
     const auto mat_light = make_shared<Mat_DiffuseLight>(Color(16, 16, 16));
 
+    shared_ptr<Hittable> box_left = Box(Point3(0, 0, 0), Point3(165, 330, 165), mat_white);
+    box_left = make_shared<Hit_RotateY>(box_left, 15);
+    box_left = make_shared<Hit_Translate>(box_left, Vec3(265, 0, 295));
+    world.Add(box_left);
+
+    shared_ptr<Hittable> box_right = Box(Point3(0, 0, 0), Point3(165, 165, 165), mat_white);
+    box_right = make_shared<Hit_RotateY>(box_right, -18);
+    box_right = make_shared<Hit_Translate>(box_right, Vec3(130, 0, 32));
+    world.Add(box_right);
+
     world.Add(make_shared<Hit_Quad>(Point3(555, 0, 0),     Vec3(0, 555, 0),  Vec3(0, 0, 555),  mat_green));
     world.Add(make_shared<Hit_Quad>(Point3(0, 0, 0),       Vec3(0, 555, 0),  Vec3(0, 0, 555),  mat_red));
     world.Add(make_shared<Hit_Quad>(Point3(343, 554, 332), Vec3(-130, 0, 0), Vec3(0, 0, -105), mat_light));
@@ -262,15 +272,12 @@ static void CornellBox()
     world.Add(make_shared<Hit_Quad>(Point3(555, 555, 555), Vec3(-555, 0, 0), Vec3(0, 0, -555), mat_white));
     world.Add(make_shared<Hit_Quad>(Point3(0, 0, 555),     Vec3(555, 0, 0),  Vec3(0, 555, 0),  mat_white));
 
-    world.Add(Box(Point3(130, 0, 65), Point3(295, 165, 230), mat_white));
-    world.Add(Box(Point3(265, 0, 295), Point3(430, 330, 460), mat_white));
-
     Camera camera;
     camera.image_filename = image_filename;
-    camera.image_width = 512;
-    camera.image_height = 512;
-    camera.samples_per_pixel = 16;
-    camera.max_depth = 16;
+    camera.image_width = 256;
+    camera.image_height = 256;
+    camera.samples_per_pixel = 24;
+    camera.max_depth = 8;
     camera.fov_vertical = 40;
     camera.origin = Point3(278, 278, -800);
     camera.direction = Vec3(0, 0, 1);
@@ -285,7 +292,7 @@ int main()
     const auto start = std::chrono::high_resolution_clock::now();
 
     // Change switch case!
-    image_filename = "output/cornell-box-1.png";
+    image_filename = "output/cornell-box-translate-rotate.png";
 
     // Change image_filename!
     switch (8)

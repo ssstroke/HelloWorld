@@ -52,3 +52,13 @@ public:
 
 const Interval Interval::Empty    = Interval(+infinity, -infinity);
 const Interval Interval::Universe = Interval(-infinity, +infinity);
+
+Interval operator+(const Interval& ival, const double displacement)
+{
+    return Interval(ival.min + displacement, ival.max + displacement);
+}
+
+Interval operator+(const double displacement, const Interval& ival)
+{
+    return ival + displacement;
+}

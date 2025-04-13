@@ -205,6 +205,132 @@ private:
     }
 };
 
+class Hit_Translate : public Hittable
+{
+public:
+    Hit_Translate(const shared_ptr<Hittable> object, const Vec3& offset) :
+        object(object), offset(offset)
+    {
+        this->bbox = this->object->BBox() + offset;
+    }
+
+    bool Hit(const Ray& ray, const Interval ray_t, HitRecord& hit_record) const override
+    {
+        const Ray ray_offset = Ray(ray.Origin() - offset, ray.Direction(), ray.Time());
+
+        if (this->object->Hit(ray_offset, ray_t, hit_record) == false)
+        {
+            return false;
+        }
+
+        hit_record.point += offset;
+
+        return true;
+    }
+
+    AABB BBox() const override
+    {
+        return this->bbox;
+    }
+
+private:
+    shared_ptr<Hittable> object;
+    Vec3 offset;
+    AABB bbox;
+};
+
+class Hit_RotateY : public Hittable
+{
+public:
+    Hit_RotateY(shared_ptr<Hittable> object, const double angle) :
+        object(object)
+    {
+        const double radians = DegreesToRadians(angle);
+        this->sin_theta = std::sin(radians);
+        this->cos_theta = std::cos(radians);
+        this->bbox = object->BBox();
+
+        Point3 min( infinity,  infinity,  infinity);
+        Point3 max(-infinity, -infinity, -infinity);
+
+        for (int i = 0; i < 2; ++i)
+        {
+            for (int j = 0; j < 2; ++j)
+            {
+                for (int k = 0; k < 2; ++k)
+                {
+                    const double x = i * bbox.x.max + (1 - i) * bbox.x.min;
+                    const double y = j * bbox.y.max + (1 - j) * bbox.y.min;
+                    const double z = k * bbox.z.max + (1 - k) * bbox.z.min;
+
+                    const double x_new =  this->cos_theta * x + this->sin_theta * z;
+                    const double z_new = -this->sin_theta * x + this->cos_theta * z;
+                    
+                    const Vec3 tester(x_new, y, z_new);
+
+                    for (int c = 0; c < 3; ++c)
+                    {
+                        min[c] = std::min(min[c], tester[c]);
+                        max[c] = std::max(max[c], tester[c]);
+                    }
+                }
+            }
+        }
+
+        this->bbox = AABB(min, max);
+    }
+
+    bool Hit(const Ray& ray, const Interval ray_t, HitRecord& hit_record) const override
+    {
+        // Transform the ray from world space to object space.
+        //
+
+        const Point3 origin = Point3(
+            (cos_theta * ray.Origin().x()) - (sin_theta * ray.Origin().z()),
+            ray.Origin().y(),
+            (sin_theta * ray.Origin().x()) + (cos_theta * ray.Origin().z())
+        );
+        const Vec3 direction = Vec3(
+            (cos_theta * ray.Direction().x()) - (sin_theta * ray.Direction().z()),
+            ray.Direction().y(),
+            (sin_theta * ray.Direction().x()) + (cos_theta * ray.Direction().z())
+        );
+        const Ray ray_rotated(origin, direction, ray.Time());
+
+        if (object->Hit(ray_rotated, ray_t, hit_record) == false)
+        {
+            return false;
+        }
+
+        // Transform the intersection from object space back to world space.
+        //
+
+        hit_record.point = Point3(
+            (cos_theta * hit_record.point.x()) + (sin_theta * hit_record.point.z()),
+            hit_record.point.y(),
+            (-sin_theta * hit_record.point.x()) + (cos_theta * hit_record.point.z())
+        );
+        hit_record.normal = Vec3(
+            (cos_theta * hit_record.normal.x()) + (sin_theta * hit_record.normal.z()),
+            hit_record.normal.y(),
+            (-sin_theta * hit_record.normal.x()) + (cos_theta * hit_record.normal.z())
+        );
+
+        return true;
+    }
+
+    AABB BBox() const override
+    {
+        return this->bbox;
+    }
+
+private:
+    shared_ptr<Hittable> object;
+    double sin_theta;
+    double cos_theta;
+    AABB bbox;
+};
+
 class Hit_Sphere : public Hittable
 {
 public:
@@ -379,6 +505,23 @@ protected:
     }
 };
 
+class Hit_Tri : public Hit_Quad
+{
+public:
+    Hit_Tri(const Point3& q, const Vec3& u, const Vec3& v, shared_ptr<Material> material) :
+        Hit_Quad(q, u, v, material) {}
+
+protected:
+    bool _Hit(const double alpha, const double beta) const override
+    {
+        if (alpha < 0 || beta < 0 || alpha + beta > 1)
+        {
+            return false;
+        }
+        return true;
+    }
+};
+
 inline shared_ptr<Hit_List> Box(const Point3& a, const Point3& b, const shared_ptr<Material> material)
 {
     // Returns the 3D box (six sides) that contains the two opposite vertices a & b.
@@ -402,20 +545,3 @@ inline shared_ptr<Hit_List> Box(const Point3& a, const Point3& b, const shared_p
 
     return sides;
 }
-
-class Hit_Tri : public Hit_Quad
-{
-public:
-    Hit_Tri(const Point3& q, const Vec3& u, const Vec3& v, shared_ptr<Material> material) :
-        Hit_Quad(q, u, v, material) {}
-
-protected:
-    bool _Hit(const double alpha, const double beta) const override
-    {
-        if (alpha < 0 || beta < 0 || alpha + beta > 1)
-        {
-            return false;
-        }
-        return true;
-    }
-};

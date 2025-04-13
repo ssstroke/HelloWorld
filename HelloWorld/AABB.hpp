@@ -114,3 +114,13 @@ private:
 
 const AABB AABB::Empty = AABB(Interval::Empty, Interval::Empty, Interval::Empty);
 const AABB AABB::Universe = AABB(Interval::Universe, Interval::Universe, Interval::Universe);
+
+AABB operator+(const AABB& bbox, const Vec3& offset)
+{
+    return AABB(bbox.x + offset.x(), bbox.y + offset.y(), bbox.z + offset.z());
+}
+
+AABB operator+(const Vec3& offset, const AABB& bbox)
+{
+    return bbox + offset;
+}
