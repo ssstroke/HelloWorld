@@ -1,8 +1,11 @@
-﻿#include "Camera.hpp"
+﻿#include "RTWeekend.hpp"
+
+#include "Hit_ConstantMedium.hpp"
+
+#include "Camera.hpp"
 #include "Color.hpp"
 #include "Hittable.hpp"
 #include "Material.hpp"
-#include "RTWeekend.hpp"
 #include "Texture.hpp"
 #include "Vec3.hpp"
 
@@ -255,6 +258,13 @@ static void CornellBox()
     const auto mat_green = make_shared<Mat_Lambertian>(Color(.12, .45, .15));
     const auto mat_light = make_shared<Mat_DiffuseLight>(Color(16, 16, 16));
 
+    world.Add(make_shared<Hit_Quad>(Point3(555, 0, 0), Vec3(0, 555, 0), Vec3(0, 0, 555), mat_green));
+    world.Add(make_shared<Hit_Quad>(Point3(0, 0, 0), Vec3(0, 555, 0), Vec3(0, 0, 555), mat_red));
+    world.Add(make_shared<Hit_Quad>(Point3(343, 554, 332), Vec3(-130, 0, 0), Vec3(0, 0, -105), mat_light));
+    world.Add(make_shared<Hit_Quad>(Point3(0, 0, 0), Vec3(555, 0, 0), Vec3(0, 0, 555), mat_white));
+    world.Add(make_shared<Hit_Quad>(Point3(555, 555, 555), Vec3(-555, 0, 0), Vec3(0, 0, -555), mat_white));
+    world.Add(make_shared<Hit_Quad>(Point3(0, 0, 555), Vec3(555, 0, 0), Vec3(0, 555, 0), mat_white));
+
     shared_ptr<Hittable> box_left = Box(Point3(0, 0, 0), Point3(165, 330, 165), mat_white);
     box_left = make_shared<Hit_RotateY>(box_left, 15);
     box_left = make_shared<Hit_Translate>(box_left, Vec3(265, 0, 295));
@@ -265,19 +275,53 @@ static void CornellBox()
     box_right = make_shared<Hit_Translate>(box_right, Vec3(130, 0, 32));
     world.Add(box_right);
 
-    world.Add(make_shared<Hit_Quad>(Point3(555, 0, 0),     Vec3(0, 555, 0),  Vec3(0, 0, 555),  mat_green));
-    world.Add(make_shared<Hit_Quad>(Point3(0, 0, 0),       Vec3(0, 555, 0),  Vec3(0, 0, 555),  mat_red));
-    world.Add(make_shared<Hit_Quad>(Point3(343, 554, 332), Vec3(-130, 0, 0), Vec3(0, 0, -105), mat_light));
-    world.Add(make_shared<Hit_Quad>(Point3(0, 0, 0),       Vec3(555, 0, 0),  Vec3(0, 0, 555),  mat_white));
+    Camera camera;
+    camera.image_filename = image_filename;
+    camera.image_width = 640;
+    camera.image_height = 640;
+    camera.samples_per_pixel = 256;
+    camera.max_depth = 16;
+    camera.fov_vertical = 40;
+    camera.origin = Point3(278, 278, -800);
+    camera.direction = Vec3(0, 0, 1);
+    camera.direction_up = Vec3(0, 1, 0);
+    camera.defocus_angle = 0;
+    camera.background = Color(0, 0, 0);
+    camera.Render(world);
+}
+
+static void CornellSmoke()
+{
+    Hit_List world;
+
+    const auto mat_red = make_shared<Mat_Lambertian>(Color(.65, .05, .05));
+    const auto mat_white = make_shared<Mat_Lambertian>(Color(.73, .73, .73));
+    const auto mat_green = make_shared<Mat_Lambertian>(Color(.12, .45, .15));
+    const auto mat_light = make_shared<Mat_DiffuseLight>(Color(8, 8, 8));
+
+    world.Add(make_shared<Hit_Quad>(Point3(555, 0, 0), Vec3(0, 555, 0), Vec3(0, 0, 555), mat_green));
+    world.Add(make_shared<Hit_Quad>(Point3(0, 0, 0), Vec3(0, 555, 0), Vec3(0, 0, 555), mat_red));
+    world.Add(make_shared<Hit_Quad>(Point3(113, 554, 127), Vec3(330, 0, 0), Vec3(0, 0, 305), mat_light));
+    world.Add(make_shared<Hit_Quad>(Point3(0, 0, 0), Vec3(555, 0, 0), Vec3(0, 0, 555), mat_white));
     world.Add(make_shared<Hit_Quad>(Point3(555, 555, 555), Vec3(-555, 0, 0), Vec3(0, 0, -555), mat_white));
-    world.Add(make_shared<Hit_Quad>(Point3(0, 0, 555),     Vec3(555, 0, 0),  Vec3(0, 555, 0),  mat_white));
+    world.Add(make_shared<Hit_Quad>(Point3(0, 0, 555), Vec3(555, 0, 0), Vec3(0, 555, 0), mat_white));
+
+    shared_ptr<Hittable> box_left = Box(Point3(0, 0, 0), Point3(165, 330, 165), mat_white);
+    box_left = make_shared<Hit_RotateY>(box_left, 15);
+    box_left = make_shared<Hit_Translate>(box_left, Vec3(265, 0, 295));
+    world.Add(make_shared<Hit_ConstantMedium>(box_left, 0.01, Color(0, 0, 0)));
+
+    shared_ptr<Hittable> box_right = Box(Point3(0, 0, 0), Point3(165, 165, 165), mat_white);
+    box_right = make_shared<Hit_RotateY>(box_right, -18);
+    box_right = make_shared<Hit_Translate>(box_right, Vec3(130, 0, 32));
+    world.Add(make_shared<Hit_ConstantMedium>(box_right, 0.01, Color(1, 1, 1)));
 
     Camera camera;
     camera.image_filename = image_filename;
-    camera.image_width = 256;
-    camera.image_height = 256;
-    camera.samples_per_pixel = 24;
-    camera.max_depth = 8;
+    camera.image_width = 360;
+    camera.image_height = 360;
+    camera.samples_per_pixel = 32;
+    camera.max_depth = 50;
     camera.fov_vertical = 40;
     camera.origin = Point3(278, 278, -800);
     camera.direction = Vec3(0, 0, 1);
@@ -292,10 +336,10 @@ int main()
     const auto start = std::chrono::high_resolution_clock::now();
 
     // Change switch case!
-    image_filename = "output/cornell-box-translate-rotate.png";
+    image_filename = "output/cornell-smoke-3.png";
 
     // Change image_filename!
-    switch (8)
+    switch (9)
     {
     case 1: BouncingSpheres();
         break;
@@ -312,6 +356,8 @@ int main()
     case 7: Emission();
         break;
     case 8: CornellBox();
+        break;
+    case 9: CornellSmoke();
         break;
     }
 

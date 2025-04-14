@@ -1,9 +1,10 @@
 #pragma once
 
+#include "RTWeekend.hpp"
+
 #include "AABB.hpp"
 #include "Interval.hpp"
 #include "Ray.hpp"
-#include "RTWeekend.hpp"
 #include "Vec3.hpp"
 
 #include <algorithm>

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "RTWeekend.hpp"
+
 #include "Vec3.hpp"
 
 #include <cmath>

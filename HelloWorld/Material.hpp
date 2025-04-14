@@ -1,9 +1,10 @@
 ﻿#pragma once
 
+#include "RTWeekend.hpp"
+
 #include "Color.hpp"
 #include "Hittable.hpp"
 #include "Ray.hpp"
-#include "RTWeekend.hpp"
 #include "Texture.hpp"
 #include "Vec3.hpp"
 
@@ -136,4 +137,21 @@ public:
 
 private:
     shared_ptr<Texture> texture;
+};
+
+class Mat_Isotropic : public Material
+{
+public:
+    Mat_Isotropic(const Color& albedo) : tex(make_shared<Tex_SolidColor>(albedo)) {}
+    Mat_Isotropic(shared_ptr<Texture> tex) : tex(tex) {}
+
+    bool Scatter(const Ray& ray_in, const HitRecord& hit_record, Color& attenuation, Ray& scattered) const override
+    {
+        scattered = Ray(hit_record.point, RandomUnitVector(), ray_in.Time());
+        attenuation = tex->Value(hit_record.u, hit_record.v, hit_record.point);
+        return true;
+    }
+
+private:
+    shared_ptr<Texture> tex;
 };

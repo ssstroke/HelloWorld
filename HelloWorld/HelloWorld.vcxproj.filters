@@ -56,5 +56,8 @@
     <ClInclude Include="Perlin.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Hit_ConstantMedium.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

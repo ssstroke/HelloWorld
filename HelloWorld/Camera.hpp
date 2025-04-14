@@ -5,13 +5,14 @@
 
 #pragma once
 
+#include "RTWeekend.hpp"
+
 #include "Color.hpp"
 #include "Hittable.hpp"
 #include "Image.hpp"
 #include "Interval.hpp"
 #include "Material.hpp"
 #include "Ray.hpp"
-#include "RTWeekend.hpp"
 #include "Vec3.hpp"
 
 #include <cmath>

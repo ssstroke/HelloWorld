@@ -154,6 +154,7 @@
     <ClInclude Include="Image.hpp" />
     <ClInclude Include="Interval.hpp" />
     <ClInclude Include="Material.hpp" />
+    <ClInclude Include="Hit_ConstantMedium.hpp" />
     <ClInclude Include="Perlin.hpp" />
     <ClInclude Include="Ray.hpp" />
     <ClInclude Include="RTWeekend.hpp" />
