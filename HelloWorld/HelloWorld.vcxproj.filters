@@ -59,5 +59,11 @@
     <ClInclude Include="Hit_ConstantMedium.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Util.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Vec2.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -5,10 +5,12 @@
 #include "AABB.hpp"
 #include "Interval.hpp"
 #include "Ray.hpp"
+#include "Vec2.hpp"
 #include "Vec3.hpp"
 
 #include <algorithm>
 #include <cmath>
+#include <cstdio>
 #include <cstdlib>
 #include <memory>
 #include <utility>
@@ -470,12 +472,10 @@ public:
         const double alpha = Dot(this->w, Cross(planar_intersection, v));
         const double beta  = Dot(this->w, Cross(u, planar_intersection));
 
-        if (_Hit(alpha, beta) == false)
+        if (_Hit(alpha, beta, hit_record, intersection) == false)
         {
             return false;
         }
-        hit_record.u = alpha;
-        hit_record.v = beta;
 
         hit_record.t = t;
         hit_record.point = intersection;
@@ -495,13 +495,15 @@ protected:
     double d;
     Vec3 w;
 
-    virtual bool _Hit(const double alpha, const double beta) const
+    virtual bool _Hit(const double alpha, const double beta, HitRecord& hit_record, const Point3& intersection) const
     {
         const Interval unit_interval = Interval(0, 1);
         if (unit_interval.Contains(alpha) == false || unit_interval.Contains(beta) == false)
         {
             return false;
         }
+        hit_record.u = alpha;
+        hit_record.v = beta;
         return true;
     }
 };
@@ -512,13 +514,49 @@ public:
     Hit_Tri(const Point3& q, const Vec3& u, const Vec3& v, shared_ptr<Material> material) :
         Hit_Quad(q, u, v, material) {}
 
+    Hit_Tri(const Point3& q, const Vec3& u, const Vec3& v,
+        const std::vector<Vec2>& uv,
+        shared_ptr<Material> material) :
+        Hit_Quad(q, u, v, material), uv(uv) {
+    }
+
+    // uv[0] - Q
+    // uv[1] - Q + u
+    // uv[2] - Q + v
+    std::vector<Vec2> uv = std::vector<Vec2>(3);
+
 protected:
-    bool _Hit(const double alpha, const double beta) const override
+    bool _Hit(const double alpha, const double beta, HitRecord& hit_record, const Point3& intersection) const override
     {
         if (alpha < 0 || beta < 0 || alpha + beta > 1)
         {
             return false;
         }
+
+        const Vec3 b = this->q + this->u;
+        const Vec3 c = this->q + this->v;
+
+        const Vec3 v0 = b - this->q;
+        const Vec3 v1 = c - this->q;
+        const Vec3 v2 = intersection - this->q;
+
+        const double d00 = Dot(v0, v0);
+        const double d01 = Dot(v0, v1);
+        const double d11 = Dot(v1, v1);
+        const double d20 = Dot(v2, v0);
+        const double d21 = Dot(v2, v1);
+
+        const double denom = d00 * d11 - d01 * d01;
+
+        const double v = (d11 * d20 - d01 * d21) / denom;
+        const double w = (d00 * d21 - d01 * d20) / denom;
+        const double u = 1 - v - w;
+
+        const Vec2 uv_p = u * uv[0] + v * uv[1] + w * uv[2];
+
+        hit_record.u = uv_p.x();
+        hit_record.v = uv_p.y();
+
         return true;
     }
 };

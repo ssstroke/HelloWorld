@@ -11,11 +11,11 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_FAILURE_USERMSG
-#include <stb_image.h>
+#include "include/stb_image.h"
 
 #pragma warning(disable : 4996) // `std_image_write.h` uses `sprintf`.
 #define STB_IMAGE_WRITE_IMPLEMENTATION // must be defined before #including
-#include <stb_image_write.h>
+#include "include/stb_image_write.h"
 
 class Image
 {

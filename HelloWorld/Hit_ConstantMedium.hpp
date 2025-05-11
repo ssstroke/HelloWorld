@@ -16,7 +16,6 @@
 
 #include <cmath>
 #include <memory>
-#include <utility>
 
 using std::make_shared;
 using std::shared_ptr;

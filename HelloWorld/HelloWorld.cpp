@@ -8,6 +8,7 @@
 #include "Material.hpp"
 #include "Texture.hpp"
 #include "Vec3.hpp"
+#include "Util.hpp"
 
 #include <chrono>
 #include <iostream>
@@ -331,15 +332,35 @@ static void CornellSmoke()
     camera.Render(world);
 }
 
+static void ImportMesh(const std::string& name)
+{
+    Hit_List world = MeshLoad(name);
+
+    Camera camera;
+    camera.image_filename = image_filename;
+    camera.image_width = 320;
+    camera.image_height = 240;
+    camera.samples_per_pixel = 64;
+    camera.max_depth = 8;
+    camera.fov_vertical = 35;
+    camera.origin = Point3(0, 0, 7);
+    camera.direction = UnitVector(-camera.origin);
+    camera.direction_up = Vec3(0, 1, 0);
+    camera.defocus_angle = 0;
+    camera.background = Color(0.7, 0.8, 1);
+    camera.Render(world);
+}
+
 int main()
 {
     const auto start = std::chrono::high_resolution_clock::now();
 
     // Change switch case!
-    image_filename = "output/cornell-smoke-3.png";
+    image_filename = "output/tex-11.png";
+    const std::string name = "assets/Mug.obj";
 
     // Change image_filename!
-    switch (9)
+    switch (10)
     {
     case 1: BouncingSpheres();
         break;
@@ -358,6 +379,8 @@ int main()
     case 8: CornellBox();
         break;
     case 9: CornellSmoke();
+        break;
+    case 10: ImportMesh(name);
         break;
     }
 
