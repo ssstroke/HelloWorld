@@ -1,0 +1,246 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="AABB">
+    <Position X="11" Y="17.5" Width="6" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAIAABAAMAAAAAAAAABgAUAAAAA=</HashCode>
+      <FileName>AABB.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Camera">
+    <Position X="17.25" Y="11.5" Width="6" />
+    <Members>
+      <Field Name="defocus_angle" Hidden="true" />
+      <Field Name="defocus_disk_u" Hidden="true" />
+      <Field Name="defocus_disk_v" Hidden="true" />
+      <Method Name="DefocusDiskSample" Hidden="true" />
+      <Field Name="direction" Hidden="true" />
+      <Field Name="direction_up" Hidden="true" />
+      <Field Name="focus_distance" Hidden="true" />
+      <Field Name="fov_vertical" Hidden="true" />
+      <Field Name="max_depth" Hidden="true" />
+      <Field Name="origin" Hidden="true" />
+      <Field Name="pixel_samples_scale" Hidden="true" />
+      <Field Name="samples_per_pixel" Hidden="true" />
+      <Method Name="SampleSquare" Hidden="true" />
+      <Field Name="u" Hidden="true" />
+      <Field Name="v" Hidden="true" />
+      <Field Name="w" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>CC4CBAAAACAAIQEBAAgAABACEBgAAAAJIBogQAACIAA=</HashCode>
+      <FileName>Camera.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HitRecord">
+    <Position X="11" Y="14.5" Width="6" />
+    <Members>
+      <Field Name="material" Hidden="true" />
+      <Field Name="u" Hidden="true" />
+      <Field Name="v" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAEAAAgAAAAAAAAAABYAAABIAAA=</HashCode>
+      <FileName>Hittable.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hittable">
+    <Position X="17.25" Y="7" Width="1.5" />
+    <Members>
+      <Method Name="BBox" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAAAAAIAAAAEAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Hittable.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hit_List">
+    <Position X="21.25" Y="6" Width="2" />
+    <Members>
+      <Field Name="bbox" Hidden="true" />
+      <Method Name="BBox" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAIAQAAAAAAAAAAABAIAAAAAAQAAAAAAAAAACABAAAA=</HashCode>
+      <FileName>Hittable.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hit_BVHNode">
+    <Position X="11" Y="20.75" Width="6" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAAABAIAAIAAAAAIAgAgAAAAQAAAgAg=</HashCode>
+      <FileName>Hittable.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hit_Translate" Collapsed="true">
+    <Position X="5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAQAAAACAAAAAABAIAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Hittable.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hit_RotateY" Collapsed="true">
+    <Position X="7" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAABCAAAAAABAIAAAABAIAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Hittable.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hit_Sphere">
+    <Position X="21.25" Y="8.75" Width="2" />
+    <Members>
+      <Field Name="bbox" Hidden="true" />
+      <Method Name="BBox" Hidden="true" />
+      <Method Name="GetUV" Hidden="true" />
+      <Field Name="material" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAgAQAAACAAAAACIBAIAAAAAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>Hittable.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hit_Quad" Collapsed="true">
+    <Position X="9.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABQAAAAAAAAAAABAIAAAgAAAAABAAEALoAAABAAAA=</HashCode>
+      <FileName>Hittable.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hit_Tri">
+    <Position X="9.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAgA=</HashCode>
+      <FileName>Hittable.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Image" Collapsed="true">
+    <Position X="28.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABQACDAAAAAAQAQAEAAAAAAAAAADIIAAAQAAAAACA=</HashCode>
+      <FileName>Image.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Interval">
+    <Position X="4.25" Y="16" Width="6" />
+    <TypeIdentifier>
+      <HashCode>AQAAEAABAgAQgAAAAIIAAAAAEAAAAAAAAAAAAAAQAAA=</HashCode>
+      <FileName>Interval.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Material">
+    <Position X="17.25" Y="25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAEAAAAAAAAABAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Material.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mat_Lambertian">
+    <Position X="14" Y="27.25" Width="2.5" />
+    <Members>
+      <Field Name="texture" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AABAAIAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Material.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mat_Metal">
+    <Position X="16.75" Y="27" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAEAACAAAAAAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Material.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mat_Dielectric">
+    <Position X="19.5" Y="27" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AABAgAAAAAAAAAIAAAAAAAAAAAAAAQAAAAAAAAAAAAA=</HashCode>
+      <FileName>Material.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mat_DiffuseLight" Collapsed="true">
+    <Position X="10.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIAAAAAAAABAAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Material.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mat_Isotropic" Collapsed="true">
+    <Position X="12" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>Material.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hit_ConstantMedium" Collapsed="true">
+    <Position X="4.75" Y="3" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AABEQAAAAAAAAAAAAIIAAAAAAAAIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Hit_ConstantMedium.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Perlin" Collapsed="true">
+    <Position X="11" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>SAAAAAAAAIAAAAEEAIAAAAAAAAAAAAAAAIAIAAAAQAA=</HashCode>
+      <FileName>Perlin.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ray">
+    <Position X="11" Y="11.5" Width="6" />
+    <TypeIdentifier>
+      <HashCode>CAABAAAAAAAAKAAAACAAAAAAAACAAAAAAAAAAAgAAQA=</HashCode>
+      <FileName>Ray.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Texture">
+    <Position X="23.5" Y="22.25" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Texture.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Tex_SolidColor">
+    <Position X="21.75" Y="24.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAEAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Texture.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Tex_Checker" Collapsed="true">
+    <Position X="5.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAABAAAAAAAAAAQAAAAAAAAAAAAAAAAgAACAAAA=</HashCode>
+      <FileName>Texture.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Tex_Perlin" Collapsed="true">
+    <Position X="7.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAQAAAAAAAAAAAACAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Texture.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Tex_Image">
+    <Position X="24.5" Y="24.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAEAAAACAAAAAgAAAAAAA=</HashCode>
+      <FileName>Texture.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Vec2" Collapsed="true">
+    <Position X="26.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAAAQBAAAEABAACAABggAAAAAA=</HashCode>
+      <FileName>Vec2.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Vec3">
+    <Position X="4.25" Y="11.5" Width="6" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAAAQBAAAEABAACAABgAQEAAAA=</HashCode>
+      <FileName>Vec3.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

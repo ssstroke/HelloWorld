@@ -70,8 +70,20 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>C:\Users\User\source\repos\SDL-release-3.2.14\include;C:\Users\User\source\repos\SDL_image\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>C:\Users\User\source\repos\SDL-release-3.2.14\include;C:\Users\User\source\repos\SDL_image\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>C:\Users\User\source\repos\SDL-release-3.2.14\include;C:\Users\User\source\repos\SDL_image\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>C:\Users\User\source\repos\SDL-release-3.2.14\include;C:\Users\User\source\repos\SDL_image\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <PropertyGroup Label="Vcpkg">
-    <VcpkgEnableManifest>true</VcpkgEnableManifest>
+    <VcpkgEnableManifest>false</VcpkgEnableManifest>
     <VcpkgEnabled>false</VcpkgEnabled>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -82,6 +94,7 @@
       <ConformanceMode>true</ConformanceMode>
       <DisableAnalyzeExternal>true</DisableAnalyzeExternal>
       <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
+      <AdditionalIncludeDirectories>C:\Users\User\source\repos\SDL_image\include;C:\Users\User\source\repos\tinyfiledialogs;C:\Users\User\source\repos\SDL-release-3.2.14\include;C:\Users\User\source\repos\imgui-1.91.9b;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -98,6 +111,7 @@
       <ConformanceMode>true</ConformanceMode>
       <DisableAnalyzeExternal>true</DisableAnalyzeExternal>
       <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
+      <AdditionalIncludeDirectories>C:\Users\User\source\repos\SDL_image\include;C:\Users\User\source\repos\tinyfiledialogs;C:\Users\User\source\repos\SDL-release-3.2.14\include;C:\Users\User\source\repos\imgui-1.91.9b;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -117,6 +131,7 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <DisableAnalyzeExternal>true</DisableAnalyzeExternal>
       <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
+      <AdditionalIncludeDirectories>C:\Users\User\source\repos\SDL_image\include;C:\Users\User\source\repos\tinyfiledialogs;C:\Users\User\source\repos\SDL-release-3.2.14\include;C:\Users\User\source\repos\imgui-1.91.9b;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -136,6 +151,7 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <DisableAnalyzeExternal>true</DisableAnalyzeExternal>
       <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
+      <AdditionalIncludeDirectories>C:\Users\User\source\repos\SDL_image\include;C:\Users\User\source\repos\tinyfiledialogs;C:\Users\User\source\repos\SDL-release-3.2.14\include;C:\Users\User\source\repos\imgui-1.91.9b;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -145,9 +161,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\imgui-1.91.9b\backends\imgui_impl_sdl3.cpp" />
+    <ClCompile Include="..\..\imgui-1.91.9b\backends\imgui_impl_sdlrenderer3.cpp" />
+    <ClCompile Include="..\..\imgui-1.91.9b\imgui.cpp" />
+    <ClCompile Include="..\..\imgui-1.91.9b\imgui_demo.cpp" />
+    <ClCompile Include="..\..\imgui-1.91.9b\imgui_draw.cpp" />
+    <ClCompile Include="..\..\imgui-1.91.9b\imgui_tables.cpp" />
+    <ClCompile Include="..\..\imgui-1.91.9b\imgui_widgets.cpp" />
+    <ClCompile Include="..\..\tinyfiledialogs\tinyfiledialogs.c" />
     <ClCompile Include="HelloWorld.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\imgui-1.91.9b\backends\imgui_impl_sdl3.h" />
+    <ClInclude Include="..\..\imgui-1.91.9b\backends\imgui_impl_sdlrenderer3.h" />
+    <ClInclude Include="..\..\imgui-1.91.9b\imconfig.h" />
+    <ClInclude Include="..\..\imgui-1.91.9b\imgui.h" />
+    <ClInclude Include="..\..\imgui-1.91.9b\imgui_internal.h" />
+    <ClInclude Include="..\..\imgui-1.91.9b\imstb_rectpack.h" />
+    <ClInclude Include="..\..\imgui-1.91.9b\imstb_textedit.h" />
+    <ClInclude Include="..\..\imgui-1.91.9b\imstb_truetype.h" />
+    <ClInclude Include="..\..\tinyfiledialogs\tinyfiledialogs.h" />
     <ClInclude Include="AABB.hpp" />
     <ClInclude Include="Camera.hpp" />
     <ClInclude Include="Color.hpp" />
@@ -163,6 +196,18 @@
     <ClInclude Include="Util.hpp" />
     <ClInclude Include="Vec2.hpp" />
     <ClInclude Include="Vec3.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\vcpkg.json" />
+    <None Include="ClassDiagram.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\SDL-release-3.2.14\VisualC\SDL\SDL.vcxproj">
+      <Project>{81ce8daf-ebb2-4761-8e45-b71abcca8c68}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SDL_image\VisualC\SDL_image.vcxproj">
+      <Project>{2bd5534e-00e2-4bea-ac96-d9a92ea24696}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

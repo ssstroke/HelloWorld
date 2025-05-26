@@ -14,10 +14,16 @@
 #include "Material.hpp"
 #include "Ray.hpp"
 #include "Vec3.hpp"
+#include "Util.hpp"
 
 #include <cmath>
+#include <cstdint>
 #include <iostream>
 #include <string>
+
+#include <SDL3/SDL_pixels.h>
+#include <SDL3/SDL_render.h>
+#include <SDL3/SDL_stdinc.h>
 
 class Camera
 {
@@ -41,11 +47,20 @@ public:
 
     Color background;  // Scene background color
 
+    SDL_Surface* surface = nullptr;
+    SDL_Texture* texture = nullptr;
+
     Camera() {}
 
-    void Render(const Hittable& world)
+    void Render(const Hittable& world, SDL_Renderer* renderer)
     {
         this->Initialize();
+
+        this->surface = SDL_CreateSurface(
+            this->image_width,
+            this->image_height,
+            SDL_PIXELFORMAT_RGBA32
+        );
 
         for (int h = 0; h < this->image_height; ++h)
         {
@@ -60,17 +75,28 @@ public:
                     pixel_color += RayColor(ray, this->max_depth, world);
                 }
 
-                image.WriteColor(w, h, this->pixel_samples_scale * pixel_color);
-            }
-        }
+                pixel_color *= this->pixel_samples_scale;
 
-        if (image.WritePNG(this->image_filename))
-        {
-            std::clog << "Write to " << this->image_filename << ".\n";
-        }
-        else
-        {
-            std::clog << "Failed to write to " << this->image_filename << ".\n";
+                static const Interval intensity(0.000, 0.999);
+
+                const double r = intensity.Clamp(LinearToGamma(pixel_color.x()));
+                const double g = intensity.Clamp(LinearToGamma(pixel_color.y()));
+                const double b = intensity.Clamp(LinearToGamma(pixel_color.z()));
+
+                SDL_WriteSurfacePixelFloat(
+                    this->surface,
+                    w, h,
+                    r, g, b, 1.0f
+                );
+            }
+
+            this->texture = SDL_CreateTextureFromSurface(
+                renderer, this->surface
+            );
+
+            SDL_RenderClear(renderer);
+            SDL_RenderTexture(renderer, texture, NULL, NULL);
+            SDL_RenderPresent(renderer);
         }
     }
 

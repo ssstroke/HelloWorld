@@ -4,6 +4,7 @@
 #include "Interval.hpp"
 
 #include <cmath>
+#include <cstdlib>
 #include <cstdint>
 #include <iostream>
 #include <string>
@@ -23,10 +24,8 @@ public:
     int width = 0;
     int height = 0;
 
-    // Create an image with specified <width>, <height> parameters.
     Image(const int width, const int height) : width(width), height(height), data(width * height * 3) {}
 
-    // Load an image by specified <filename>.
     Image(const std::string& filename)
     {
         int n = this->bytes_per_pixel;
@@ -34,6 +33,7 @@ public:
         if (this->fdata == nullptr)
         {
             std::cerr << "[ERROR]:\tCould not load image `" << filename << "'\n";
+            exit(1);
         }
 
         this->bytes_per_scanline = this->width * this->bytes_per_pixel;
@@ -67,11 +67,10 @@ public:
 
         static const Interval intensity(0.000, 0.999);
 
-        // I fucking hate this.
-        //
-
         const int    offset_int    = (x + y * this->width) * 3;
         const size_t offset_size_t = size_t(offset_int);
+
+        //devops
 
         this->data[offset_size_t + 0] = uint8_t(intensity.Clamp(r) * 255.999);
         this->data[offset_size_t + 1] = uint8_t(intensity.Clamp(g) * 255.999);
@@ -91,8 +90,8 @@ public:
     }
 
 private:
-    int bytes_per_pixel    = 3; // TODO: Make `const`
-    int       bytes_per_scanline = 0;
+    int bytes_per_pixel    = 3;
+    int bytes_per_scanline = 0;
 
     float*               fdata = nullptr;
     std::vector<uint8_t> data;

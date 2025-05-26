@@ -10,10 +10,9 @@
 
 #include <algorithm>
 #include <cmath>
-#include <cstdio>
 #include <cstdlib>
+#include <iterator>
 #include <memory>
-#include <utility>
 #include <vector>
 
 using std::make_shared;

@@ -1,3 +1,5 @@
+#pragma once
+
 #define TINYOBJLOADER_IMPLEMENTATION
 #define TINYOBJLOADER_USE_DOUBLE
 #include "include/tiny_obj_loader.h"
@@ -8,6 +10,8 @@
 #include "Vec3.hpp"
 
 #include "Texture.hpp"
+#include "Vec2.hpp"
+#include <cmath>
 #include <cstdlib>
 #include <iostream>
 #include <memory>
@@ -168,4 +172,13 @@ Hit_List MeshLoad(const std::string& filename)
     }
 
     return world;
+}
+
+inline static double LinearToGamma(const double linear_component)
+{
+    if (linear_component > 0)
+    {
+        return std::sqrt(linear_component);
+    }
+    return 0;
 }

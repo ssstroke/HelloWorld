@@ -1,3 +1,5 @@
+#pragma once
+
 #include "RTWeekend.hpp"
 
 #include <cmath>
