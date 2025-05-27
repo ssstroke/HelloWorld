@@ -28,13 +28,13 @@ using std::make_shared;
 using std::shared_ptr;
 
 struct CameraSettings {
-    float fov = 35.0f;
+    float fov = 40.0f;
     float rotation = 0.0f;
     float position[3] = { 0.0f, 0.0f, 0.0f };
-    float direction[3] = { 0.0f, 0.0f, -1.0f };
-    int width = 576;
+    float direction[3] = { 0.0f, -0.2f, -1.0f };
+    int width = 384;
     int height = 384;
-    int samples = 4;
+    int samples = 2;
     int bounces = 2;
 };
 
@@ -377,7 +377,7 @@ int main()
     }
 
     SDL_WindowFlags window_flags = SDL_WINDOW_HIDDEN | SDL_WINDOW_HIGH_PIXEL_DENSITY;
-    SDL_Window* window = SDL_CreateWindow("Dear ImGui SDL3+SDL_Renderer example", 640, 480, window_flags);
+    SDL_Window* window = SDL_CreateWindow("Ray tracer", 640, 480, window_flags);
     if (window == nullptr)
     {
         printf("Error: SDL_CreateWindow(): %s\n", SDL_GetError());
@@ -410,6 +410,8 @@ int main()
     SDL_Texture* texture = nullptr;
     Camera camera;
 
+    char* obj_path = nullptr;
+
     bool done = false;
     while (!done)
     {
@@ -429,8 +431,21 @@ int main()
         ImGui::NewFrame();
 
         {
-            // Create a window called "Hello, world!" and append into it.
-            ImGui::Begin("Hello, world!");
+            ImGui::Begin("Render settings");
+
+            if (ImGui::Button("Open .obj file..."))
+            {
+                char const* lFilterPatterns[1] = { "*.obj" };
+
+                obj_path = tinyfd_openFileDialog(
+                    "Select an .obj file",
+                    "",
+                    1,
+                    lFilterPatterns,
+                    NULL,
+                    0
+                );
+            }
 
             ImGui::SliderFloat("FOV", &settings.fov, 1.0f, 180.0f, "%.1f deg");
             ImGui::SliderFloat("Rotation", &settings.rotation, -180.0f, 180.0f, "%.1f deg");
@@ -438,13 +453,13 @@ int main()
             ImGui::InputFloat3("Position", settings.position);
             ImGui::InputFloat3("Direction", settings.direction);
 
-            ImGui::SliderInt("Width", &settings.width, 1, 1280);
-            ImGui::SliderInt("Height", &settings.height, 1, 720);
+            ImGui::SliderInt("Width", &settings.width, 1, 1000);
+            ImGui::SliderInt("Height", &settings.height, 1, 1000);
 
-            ImGui::SliderInt("Samples", &settings.samples, 1, 256);
+            ImGui::SliderInt("Samples", &settings.samples, 1, 128);
             ImGui::SliderInt("Bounces", &settings.bounces, 1, 32);
 
-            if (ImGui::Button("Render"))
+            if (ImGui::Button("Render") && obj_path)
             {
                 if (texture != nullptr)
                 {
@@ -464,9 +479,10 @@ int main()
                 camera.direction = UnitVector(Vec3(settings.direction[0], settings.direction[1], settings.direction[2]));
                 camera.direction_up = Vec3(0, 1, 0);
                 camera.defocus_angle = 0;
-                camera.background = Color(0.7, 0.8, 1.0);
+                camera.background = Color(255.0 / 255.0, 242 / 255.0, 202.0 / 255.0);
 
-                Hit_List world = MeshLoad("assets/cube.obj");
+                Hit_List world = MeshLoad(std::string(obj_path));
+
                 camera.Render(world, renderer);
 
                 texture = camera.texture;
@@ -476,7 +492,7 @@ int main()
             {
                 if (ImGui::Button("Save as..."))
                 {
-                    char const* lFilterPatterns[2] = { "*.png" };
+                    char const* lFilterPatterns[1] = { "*.png" };
 
                     const char* save_path = tinyfd_saveFileDialog(
                         "Save image as...",

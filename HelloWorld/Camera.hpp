@@ -54,6 +54,13 @@ public:
 
     void Render(const Hittable& world, SDL_Renderer* renderer)
     {
+        if (this->surface != nullptr)
+        {
+            SDL_DestroySurface(this->surface);
+            this->surface = nullptr;
+            this->texture = nullptr;
+        }
+
         this->Initialize();
 
         this->surface = SDL_CreateSurface(
@@ -64,7 +71,6 @@ public:
 
         for (int h = 0; h < this->image_height; ++h)
         {
-            std::clog << "Scanline " << h << " out of " << this->image_height - 1 << ".\n";
             for (int w = 0; w < this->image_width; ++w)
             {
                 Color pixel_color(0, 0, 0);
@@ -90,9 +96,16 @@ public:
                 );
             }
 
-            this->texture = SDL_CreateTextureFromSurface(
-                renderer, this->surface
-            );
+            if (this->texture == nullptr)
+            {
+                this->texture = SDL_CreateTextureFromSurface(
+                    renderer, this->surface
+                );
+            }
+            else
+            {
+                SDL_UpdateTexture(this->texture, NULL, this->surface->pixels, this->surface->pitch);
+            }
 
             SDL_RenderClear(renderer);
             SDL_RenderTexture(renderer, texture, NULL, NULL);
